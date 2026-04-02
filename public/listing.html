@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Change Realty | Listing Details</title>
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --accent:#111827;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+
+    .topbar{
+      margin-bottom:18px;
+    }
+
+    .back-link{
+      display:inline-block;
+      text-decoration:none;
+      color:var(--text);
+      font-size:14px;
+      font-weight:600;
+      padding:10px 14px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.4fr .9fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .main-card{
+      padding:24px;
+    }
+
+    .price{
+      font-size:38px;
+      font-weight:700;
+      margin:0 0 10px;
+      line-height:1.1;
+    }
+
+    .address{
+      font-size:24px;
+      font-weight:700;
+      margin:0 0 10px;
+      line-height:1.25;
+    }
+
+    .subline{
+      font-size:15px;
+      color:var(--muted);
+      margin:0 0 18px;
+      line-height:1.45;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .badge{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#f3f4f6;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .remarks{
+      font-size:15px;
+      line-height:1.7;
+      color:var(--text);
+      white-space:pre-wrap;
+    }
+
+    .side-card{
+      padding:20px;
+      position:sticky;
+      top:20px;
+    }
+
+    .side-card h2{
+      margin:0 0 8px;
+      font-size:22px;
+    }
+
+    .side-card p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .cta-btn{
+      display:block;
+      width:100%;
+      text-align:center;
+      text-decoration:none;
+      padding:14px 16px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:15px;
+      margin-bottom:10px;
+      border:1px solid var(--border);
+    }
+
+    .cta-btn.primary{
+      background:var(--accent);
+      color:#fff;
+      border:none;
+    }
+
+    .cta-btn.secondary{
+      background:#fff;
+      color:var(--text);
+    }
+
+    .details-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .details-card{
+      padding:20px;
+    }
+
+    .details-card h3{
+      margin:0 0 12px;
+      font-size:18px;
+    }
+
+    .detail-row{
+      padding:10px 0;
+      border-bottom:1px solid var(--border);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .detail-row:last-child{
+      border-bottom:none;
+      padding-bottom:0;
+    }
+
+    .label{
+      color:var(--muted);
+      display:block;
+      margin-bottom:4px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .status{
+      font-size:14px;
+      color:var(--muted);
+      padding:20px;
+    }
+
+    .error{
+      color:#991b1b;
+    }
+
+    @media (max-width: 900px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .side-card{
+        position:static;
+      }
+
+      .details-grid{
+        grid-template-columns:1fr;
+      }
+
+      .price{
+        font-size:30px;
+      }
+
+      .address{
+        font-size:22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a class="back-link" href="/map">← Back to map</a>
+    </div>
+
+    <div id="content">
+      <div class="status">Loading listing…</div>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script>
+    const API_BASE = window.APP_CONFIG.API_BASE;
+
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    function formatPrice(listing) {
+      const price = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
+      if (price === null || price === undefined || price === "") {
+        return listing.is_lease ? "For Lease" : "Price on request";
+      }
+      const n = Number(price);
+      if (Number.isNaN(n)) return String(price);
+      return new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: "CAD",
+        maximumFractionDigits: 0
+      }).format(n);
+    }
+
+    function getAddress(listing) {
+      return (
+        listing.address_full ||
+        listing.addressFull ||
+        [listing.street_number, listing.street_name, listing.city, listing.province].filter(Boolean).join(" ") ||
+        "Address unavailable"
+      );
+    }
+
+    function getCityProvincePostal(listing) {
+      return [listing.city, listing.province, listing.postal_code].filter(Boolean).join(", ");
+    }
+
+    function getBeds(listing) {
+      return listing.bedrooms_total ?? listing.bedroomsTotal ?? "—";
+    }
+
+    function getBaths(listing) {
+      return listing.bathrooms_total ?? listing.bathroomsTotal ?? "—";
+    }
+
+    function getRemarks(listing) {
+      return listing.public_remarks || listing.publicRemarks || listing.remarks || "No remarks available.";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function renderListing(listing) {
+      const price = formatPrice(listing);
+      const address = getAddress(listing);
+      const cityProvincePostal = getCityProvincePostal(listing);
+      const remarks = getRemarks(listing);
+      const beds = getBeds(listing);
+      const baths = getBaths(listing);
+      const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
+      const status = listing.status ?? "—";
+      const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
+      const lat = listing.lat ?? "—";
+      const lng = listing.lng ?? "—";
+
+      document.title = `${address} | Change Realty`;
+
+      document.getElementById("content").innerHTML = `
+        <div class="hero">
+          <div class="card main-card">
+            <div class="price">${escapeHtml(price)}</div>
+            <div class="address">${escapeHtml(address)}</div>
+            <div class="subline">${escapeHtml(cityProvincePostal)}</div>
+
+            <div class="badges">
+              <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
+              <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
+              <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
+              <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
+            </div>
+
+            <div class="remarks">${escapeHtml(remarks)}</div>
+          </div>
+
+          <div class="card side-card">
+            <h2>Interested in this home?</h2>
+            <p>Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.</p>
+
+            <a class="cta-btn primary" href="/contact">Book a showing</a>
+            <a class="cta-btn secondary" href="/contact">Request more info</a>
+            <a class="cta-btn secondary" href="/map">See more listings</a>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="card details-card">
+            <h3>Property details</h3>
+            <div class="detail-row">
+              <span class="label">Status</span>
+              ${escapeHtml(String(status))}
+            </div>
+            <div class="detail-row">
+              <span class="label">MLS® Number</span>
+              ${escapeHtml(String(mls))}
+            </div>
+            <div class="detail-row">
+              <span class="label">Bedrooms</span>
+              ${escapeHtml(String(beds))}
+            </div>
+            <div class="detail-row">
+              <span class="label">Bathrooms</span>
+              ${escapeHtml(String(baths))}
+            </div>
+          </div>
+
+          <div class="card details-card">
+            <h3>Location & brokerage</h3>
+            <div class="detail-row">
+              <span class="label">Address</span>
+              ${escapeHtml(address)}
+            </div>
+            <div class="detail-row">
+              <span class="label">City / Province / Postal</span>
+              ${escapeHtml(cityProvincePostal)}
+            </div>
+            <div class="detail-row">
+              <span class="label">Brokerage</span>
+              ${escapeHtml(String(brokerage))}
+            </div>
+            <div class="detail-row">
+              <span class="label">Coordinates</span>
+              ${escapeHtml(String(lat))}, ${escapeHtml(String(lng))}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadListing() {
+      const key = getParam("key");
+
+      if (!key) {
+        document.getElementById("content").innerHTML = `
+          <div class="status error">Missing listing key in URL.</div>
+        `;
+        return;
+      }
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/listings/${encodeURIComponent(key)}`);
+        if (!resp.ok) {
+          throw new Error(`API returned ${resp.status}`);
+        }
+
+        const listing = await resp.json();
+        renderListing(listing);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("content").innerHTML = `
+          <div class="status error">Could not load this listing.</div>
+        `;
+      }
+    }
+
+    loadListing();
+  </script>
+</body>
+</html>

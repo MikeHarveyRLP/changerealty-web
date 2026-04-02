@@ -417,12 +417,10 @@
     }
 
     function buildDetailsUrl(listing) {
-      const key = listing.listing_key ?? listing.listingKey ?? listing.id;
-      if (key) return `/listings/${encodeURIComponent(key)}`;
-      const mls = listing.mls_number ?? listing.mlsNumber;
-      if (mls) return `/listings/mls/${encodeURIComponent(mls)}`;
-      return "#";
-    }
+  const key = listing.listing_key ?? listing.listingKey ?? listing.id;
+  if (key) return `/listing.html?key=${encodeURIComponent(key)}`;
+  return "#";
+}
 
     function escapeHtml(value) {
       return String(value ?? "")
