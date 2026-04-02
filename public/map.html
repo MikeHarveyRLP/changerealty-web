@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Change Realty | Listings Map</title>
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --accent:#111827;
+      --shadow:0 10px 30px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .page{display:grid;grid-template-columns:420px 1fr;height:100vh}
+    .sidebar{background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;min-width:320px}
+    .sidebar-header{padding:18px 18px 14px;border-bottom:1px solid var(--border);background:var(--card)}
+    .brand{font-size:20px;font-weight:700;margin:0 0 10px}
+    .sub{font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.45}
+    .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .filters label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    .filters select,.filters input,.btn{width:100%;height:42px;border:1px solid var(--border);border-radius:12px;padding:0 12px;font-size:14px;background:#fff}
+    .btn{cursor:pointer;background:var(--accent);color:#fff;border:none;font-weight:600;box-shadow:var(--shadow)}
+    .btn.secondary{background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:none}
+    .button-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .results-top{padding:12px 18px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+    .list{overflow:auto;padding:12px;flex:1}
+    .listing{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease}
+    .listing:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:#d1d5db}
+    .listing.active{border-color:#111827;box-shadow:var(--shadow)}
+    .price{font-size:22px;font-weight:700;margin:0 0 8px}
+    .address{font-size:15px;font-weight:600;margin:0 0 6px;line-height:1.35}
+    .meta,.remarks{font-size:13px;color:var(--muted);line-height:1.45}
+    .meta{margin-bottom:8px}
+    .empty{padding:20px;color:var(--muted);font-size:14px}
+    .map-wrap{position:relative}
+    #map{height:100%;width:100%}
+    .floating-cta{position:absolute;right:18px;bottom:18px;z-index:3;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;width:min(340px, calc(100% - 36px));border:1px solid var(--border)}
+    .floating-cta h3{margin:0 0 6px;font-size:16px}
+    .floating-cta p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.45}
+    .floating-cta a{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:14px;font-weight:600}
+    .pill{display:inline-block;font-size:11px;font-weight:700;padding:5px 8px;border-radius:999px;background:#f3f4f6;color:#374151;margin-bottom:8px}
+    @media (max-width:960px){
+      .page{grid-template-columns:1fr;grid-template-rows:45vh 55vh}
+      .sidebar{order:2;border-right:none;border-top:1px solid var(--border)}
+      .map-wrap{order:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="brand">Change Realty Listings Map</h1>
+        <p class="sub">Live listing map powered by your CREA feed. Move the map to load listings in the visible area.</p>
+
+        <div class="filters">
+          <div>
+            <label for="mode">Mode</label>
+            <select id="mode">
+              <option value="sale">For Sale</option>
+              <option value="lease">For Lease</option>
+              <option value="all">All Listings</option>
+            </select>
+          </div>
+          <div>
+            <label for="minPrice">Min Price</label>
+            <input id="minPrice" type="number" inputmode="numeric" placeholder="Any" />
+          </div>
+          <div>
+            <label for="maxPrice">Max Price</label>
+            <input id="maxPrice" type="number" inputmode="numeric" placeholder="Any" />
+          </div>
+          <div>
+            <label for="cityFilter">City contains</label>
+            <input id="cityFilter" type="text" placeholder="Waterloo" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="btn" id="applyFiltersBtn">Refresh map</button>
+          <button class="btn secondary" id="resetFiltersBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="results-top">
+        <div id="resultsSummary">Loading map…</div>
+        <div id="statusText">Waiting</div>
+      </div>
+
+      <div class="list" id="resultsList">
+        <div class="empty">Loading listings…</div>
+      </div>
+    </aside>
+
+    <section class="map-wrap">
+      <div id="map"></div>
+
+      <div class="floating-cta">
+        <h3>Want the full details?</h3>
+        <p>Next step: turn this into a lead page with “Book a showing” and “Get new listings like this” forms.</p>
+        <a href="/contact">Book a showing</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+
+<script src="/config.js"></script>
+    const API_BASE = window.APP_CONFIG.API_BASE;
+    const GOOGLE_MAP_ID = "DEMO_MAP_ID";
+    const DEFAULT_CENTER = { lat: 43.4516, lng: -80.4925 };
+    const DEFAULT_ZOOM = 11;
+
+    let map;
+    let infoWindow;
+    let markers = [];
+    let markerById = new Map();
+    let lastListings = [];
+    let fetchTimer = null;
+
+    function formatPrice(listing) {
+      const price = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
+      if (price === null || price === undefined || price === "") {
+        return listing.is_lease ? "For Lease" : "Price on request";
+      }
+      const n = Number(price);
+      if (Number.isNaN(n)) return String(price);
+      return new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: "CAD",
+        maximumFractionDigits: 0
+      }).format(n);
+    }
+
+    function getListingId(listing) {
+      return String(
+        listing.listing_key ??
+        listing.listingKey ??
+        listing.id ??
+        listing.mls_number ??
+        listing.mlsNumber ??
+        Math.random()
+      );
+    }
+
+    function getLatLng(listing) {
+      const lat = Number(listing.lat ?? listing.latitude);
+      const lng = Number(listing.lng ?? listing.lon ?? listing.longitude);
+      if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
+      return { lat, lng };
+    }
+
+    function getAddress(listing) {
+      return (
+        listing.address_full ||
+        listing.addressFull ||
+        [listing.street_number, listing.street_name, listing.city, listing.province].filter(Boolean).join(" ") ||
+        listing.unparsedAddress ||
+        "Address unavailable"
+      );
+    }
+
+    function getCityProvince(listing) {
+      return [listing.city, listing.province].filter(Boolean).join(", ");
+    }
+
+    function getBedsBaths(listing) {
+      const beds = listing.bedrooms_total ?? listing.bedroomsTotal ?? null;
+      const baths = listing.bathrooms_total ?? listing.bathroomsTotal ?? null;
+      const parts = [];
+      if (beds) parts.push(`${beds} bed`);
+      if (baths) parts.push(`${baths} bath`);
+      return parts.join(" • ");
+    }
+
+    function getRemarks(listing) {
+      return listing.public_remarks || listing.publicRemarks || listing.remarks || "";
+    }
+
+    function buildDetailsUrl(listing) {
+      const key = listing.listing_key ?? listing.listingKey ?? listing.id;
+      if (key) return `/listings/${encodeURIComponent(key)}`;
+      const mls = listing.mls_number ?? listing.mlsNumber;
+      if (mls) return `/listings/mls/${encodeURIComponent(mls)}`;
+      return "#";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function getVisibleBoundsParams() {
+      const bounds = map.getBounds();
+      if (!bounds) return null;
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+
+      return new URLSearchParams({
+        west: sw.lng().toString(),
+        south: sw.lat().toString(),
+        east: ne.lng().toString(),
+        north: ne.lat().toString(),
+        mode: document.getElementById("mode").value
+      });
+    }
+
+    function applyClientFilters(listings) {
+      const minPrice = Number(document.getElementById("minPrice").value || 0);
+      const maxPriceRaw = document.getElementById("maxPrice").value;
+      const maxPrice = maxPriceRaw ? Number(maxPriceRaw) : null;
+      const cityFilter = document.getElementById("cityFilter").value.trim().toLowerCase();
+
+      return listings.filter(listing => {
+        const price = Number(listing.list_price ?? listing.listPrice ?? listing.price ?? NaN);
+        const city = String(listing.city || "").toLowerCase();
+
+        if (minPrice && !Number.isNaN(price) && price < minPrice) return false;
+        if (maxPrice !== null && !Number.isNaN(price) && price > maxPrice) return false;
+        if (cityFilter && !city.includes(cityFilter)) return false;
+        return true;
+      });
+    }
+
+    function setStatus(text) {
+      document.getElementById("statusText").textContent = text;
+    }
+
+    function renderList(listings) {
+      const container = document.getElementById("resultsList");
+      const summary = document.getElementById("resultsSummary");
+      summary.textContent = `${listings.length} listing${listings.length === 1 ? "" : "s"} in view`;
+
+      if (!listings.length) {
+        container.innerHTML = '<div class="empty">No listings match the visible map area and filters.</div>';
+        return;
+      }
+
+      container.innerHTML = listings.map(listing => {
+        const id = getListingId(listing);
+        const price = formatPrice(listing);
+        const address = getAddress(listing);
+        const cityProvince = getCityProvince(listing);
+        const bedsBaths = getBedsBaths(listing);
+        const remarks = getRemarks(listing);
+        const shortRemarks = remarks.length > 140 ? remarks.slice(0, 140).trim() + "…" : remarks;
+        const isLease = !!listing.is_lease;
+
+        return `
+          <article class="listing" data-id="${escapeHtml(id)}">
+            <div class="pill">${isLease ? "For Lease" : "For Sale"}</div>
+            <div class="price">${escapeHtml(price)}</div>
+            <div class="address">${escapeHtml(address)}</div>
+            <div class="meta">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
+            <div class="remarks">${escapeHtml(shortRemarks || "Click pin for more details.")}</div>
+          </article>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".listing").forEach(card => {
+        card.addEventListener("click", () => {
+          const id = card.dataset.id;
+          const marker = markerById.get(id);
+          const listing = lastListings.find(x => getListingId(x) === id);
+          if (!listing) return;
+          highlightCard(id);
+          if (marker) {
+            map.panTo(marker.position);
+            openInfoWindow(listing, marker);
+          }
+        });
+      });
+    }
+
+    function highlightCard(id) {
+      document.querySelectorAll(".listing").forEach(el => {
+        el.classList.toggle("active", el.dataset.id === id);
+      });
+    }
+
+    function clearMarkers() {
+      markers.forEach(marker => { marker.map = null; });
+      markers = [];
+      markerById.clear();
+    }
+
+    function openInfoWindow(listing, marker) {
+      const price = formatPrice(listing);
+      const address = getAddress(listing);
+      const cityProvince = getCityProvince(listing);
+      const bedsBaths = getBedsBaths(listing);
+      const detailsUrl = buildDetailsUrl(listing);
+      const remarks = getRemarks(listing);
+      const shortRemarks = remarks.length > 180 ? remarks.slice(0, 180).trim() + "…" : remarks;
+
+      const html = `
+        <div style="max-width:280px;padding:4px 2px;">
+          <div style="font-size:18px;font-weight:700;margin-bottom:6px;">${escapeHtml(price)}</div>
+          <div style="font-size:14px;font-weight:600;line-height:1.35;margin-bottom:6px;">${escapeHtml(address)}</div>
+          <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
+          <div style="font-size:13px;line-height:1.45;margin-bottom:10px;">${escapeHtml(shortRemarks)}</div>
+          <a href="${escapeHtml(detailsUrl)}" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;">View full details</a>
+        </div>
+      `;
+
+      infoWindow.setContent(html);
+      infoWindow.open({ anchor: marker, map });
+    }
+
+    async function loadListingsForMap() {
+      if (!map || !map.getBounds()) return;
+      setStatus("Loading…");
+
+      const params = getVisibleBoundsParams();
+      if (!params) return;
+
+      try {
+        const url = `${API_BASE}/api/listings?${params.toString()}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`API returned ${resp.status}`);
+
+        const payload = await resp.json();
+        const rawListings = Array.isArray(payload) ? payload : (payload.listings || payload.data || []);
+        const listings = applyClientFilters(rawListings).filter(x => getLatLng(x));
+
+        lastListings = listings;
+        renderList(listings);
+        renderMarkers(listings);
+        setStatus("Updated");
+      } catch (err) {
+        console.error(err);
+        document.getElementById("resultsSummary").textContent = "Could not load listings";
+        document.getElementById("resultsList").innerHTML = '<div class="empty">Error loading listings from the API.</div>';
+        setStatus("Error");
+      }
+    }
+
+    function renderMarkers(listings) {
+      clearMarkers();
+
+      listings.forEach(listing => {
+        const pos = getLatLng(listing);
+        if (!pos) return;
+
+        const id = getListingId(listing);
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: pos,
+          title: getAddress(listing),
+          gmpClickable: true
+        });
+
+        marker.addListener("click", () => {
+          highlightCard(id);
+          openInfoWindow(listing, marker);
+          const card = document.querySelector(`.listing[data-id="${CSS.escape(id)}"]`);
+          if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        markers.push(marker);
+        markerById.set(id, marker);
+      });
+    }
+
+    function debounceLoad() {
+      clearTimeout(fetchTimer);
+      fetchTimer = setTimeout(loadListingsForMap, 350);
+    }
+
+    async function initMap() {
+      const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+      await google.maps.importLibrary("marker");
+
+      map = new Map(document.getElementById("map"), {
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
+        mapId: GOOGLE_MAP_ID,
+        fullscreenControl: false,
+        streetViewControl: false,
+        mapTypeControl: false
+      });
+
+      infoWindow = new InfoWindow();
+      map.addListener("idle", debounceLoad);
+
+      document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
+      document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+        document.getElementById("mode").value = "sale";
+        document.getElementById("minPrice").value = "";
+        document.getElementById("maxPrice").value = "";
+        document.getElementById("cityFilter").value = "";
+        loadListingsForMap();
+      });
+    }
+
+    window.initMap = initMap;
+  </script>
+
+<script>
+  const script = document.createElement("script");
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${window.APP_CONFIG.GOOGLE_MAPS_API_KEY}&v=weekly&callback=initMap&libraries=marker`;
+  script.async = true;
+  document.head.appendChild(script);
+</script>
+</body>
+</html>
