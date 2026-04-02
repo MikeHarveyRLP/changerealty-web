@@ -4,52 +4,286 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Change Realty | Listings Map</title>
-  <style>
-    :root{
-      --bg:#f6f7f9;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --accent:#111827;
-      --shadow:0 10px 30px rgba(0,0,0,.10);
+<style>
+  :root{
+    --bg:#f6f7f9;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --accent:#111827;
+    --shadow:0 10px 30px rgba(0,0,0,.10);
+  }
+
+  *{
+    box-sizing:border-box;
+  }
+
+  html,
+  body{
+    height:100%;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow:hidden;
+  }
+
+  body{
+    min-height:100vh;
+  }
+
+  .page{
+    display:grid;
+    grid-template-columns:420px 1fr;
+    width:100%;
+    height:100vh;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  .sidebar{
+    background:var(--card);
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    min-width:320px;
+    height:100vh;
+    overflow:hidden;
+  }
+
+  .sidebar-header{
+    padding:18px 18px 14px;
+    border-bottom:1px solid var(--border);
+    background:var(--card);
+    flex:0 0 auto;
+  }
+
+  .brand{
+    font-size:20px;
+    font-weight:700;
+    margin:0 0 10px;
+  }
+
+  .sub{
+    font-size:14px;
+    color:var(--muted);
+    margin:0 0 14px;
+    line-height:1.45;
+  }
+
+  .filters{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .filters label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+
+  .filters select,
+  .filters input,
+  .btn{
+    width:100%;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0 12px;
+    font-size:14px;
+    background:#fff;
+  }
+
+  .btn{
+    cursor:pointer;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    font-weight:600;
+    box-shadow:var(--shadow);
+  }
+
+  .btn.secondary{
+    background:#fff;
+    color:var(--text);
+    border:1px solid var(--border);
+    box-shadow:none;
+  }
+
+  .button-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+
+  .results-top{
+    padding:12px 18px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex:0 0 auto;
+  }
+
+  .list{
+    overflow:auto;
+    padding:12px;
+    flex:1 1 auto;
+    min-height:0;
+  }
+
+  .listing{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+
+  .listing:hover{
+    transform:translateY(-1px);
+    box-shadow:var(--shadow);
+    border-color:#d1d5db;
+  }
+
+  .listing.active{
+    border-color:#111827;
+    box-shadow:var(--shadow);
+  }
+
+  .price{
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 8px;
+  }
+
+  .address{
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 6px;
+    line-height:1.35;
+  }
+
+  .meta,
+  .remarks{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .meta{
+    margin-bottom:8px;
+  }
+
+  .empty{
+    padding:20px;
+    color:var(--muted);
+    font-size:14px;
+  }
+
+  .map-wrap{
+    position:relative;
+    width:100%;
+    height:100vh;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  #map{
+    width:100%;
+    height:100vh;
+    min-height:100vh;
+  }
+
+  .floating-cta{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    z-index:3;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:14px 16px;
+    width:min(340px, calc(100% - 36px));
+    border:1px solid var(--border);
+  }
+
+  .floating-cta h3{
+    margin:0 0 6px;
+    font-size:16px;
+  }
+
+  .floating-cta p{
+    margin:0 0 10px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .floating-cta a{
+    display:inline-block;
+    padding:10px 14px;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+  }
+
+  .pill{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:5px 8px;
+    border-radius:999px;
+    background:#f3f4f6;
+    color:#374151;
+    margin-bottom:8px;
+  }
+
+  @media (max-width:960px){
+    html,
+    body{
+      overflow:auto;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    .page{display:grid;grid-template-columns:420px 1fr;height:100vh}
-    .sidebar{background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;min-width:320px}
-    .sidebar-header{padding:18px 18px 14px;border-bottom:1px solid var(--border);background:var(--card)}
-    .brand{font-size:20px;font-weight:700;margin:0 0 10px}
-    .sub{font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.45}
-    .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .filters label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-    .filters select,.filters input,.btn{width:100%;height:42px;border:1px solid var(--border);border-radius:12px;padding:0 12px;font-size:14px;background:#fff}
-    .btn{cursor:pointer;background:var(--accent);color:#fff;border:none;font-weight:600;box-shadow:var(--shadow)}
-    .btn.secondary{background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:none}
-    .button-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    .results-top{padding:12px 18px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
-    .list{overflow:auto;padding:12px;flex:1}
-    .listing{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease}
-    .listing:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:#d1d5db}
-    .listing.active{border-color:#111827;box-shadow:var(--shadow)}
-    .price{font-size:22px;font-weight:700;margin:0 0 8px}
-    .address{font-size:15px;font-weight:600;margin:0 0 6px;line-height:1.35}
-    .meta,.remarks{font-size:13px;color:var(--muted);line-height:1.45}
-    .meta{margin-bottom:8px}
-    .empty{padding:20px;color:var(--muted);font-size:14px}
-    .map-wrap{position:relative}
-    #map{height:100%;width:100%}
-    .floating-cta{position:absolute;right:18px;bottom:18px;z-index:3;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;width:min(340px, calc(100% - 36px));border:1px solid var(--border)}
-    .floating-cta h3{margin:0 0 6px;font-size:16px}
-    .floating-cta p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.45}
-    .floating-cta a{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:14px;font-weight:600}
-    .pill{display:inline-block;font-size:11px;font-weight:700;padding:5px 8px;border-radius:999px;background:#f3f4f6;color:#374151;margin-bottom:8px}
-    @media (max-width:960px){
-      .page{grid-template-columns:1fr;grid-template-rows:45vh 55vh}
-      .sidebar{order:2;border-right:none;border-top:1px solid var(--border)}
-      .map-wrap{order:1}
+
+    .page{
+      grid-template-columns:1fr;
+      grid-template-rows:45vh 55vh;
+      height:100vh;
+      min-height:100vh;
     }
-  </style>
+
+    .map-wrap{
+      order:1;
+      height:45vh;
+      min-height:45vh;
+    }
+
+    #map{
+      height:45vh;
+      min-height:45vh;
+    }
+
+    .sidebar{
+      order:2;
+      border-right:none;
+      border-top:1px solid var(--border);
+      height:55vh;
+      min-height:55vh;
+    }
+  }
+</style>
 </head>
 <body>
   <div class="page">
