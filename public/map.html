@@ -108,9 +108,9 @@
     </section>
   </div>
 
-  <script>
+  <script src="/config.js"></script>
 
-<script src="/config.js"></script>
+  <script>
     const API_BASE = window.APP_CONFIG.API_BASE;
     const GOOGLE_MAP_ID = "DEMO_MAP_ID";
     const DEFAULT_CENTER = { lat: 43.4516, lng: -80.4925 };
@@ -405,11 +405,11 @@
     window.initMap = initMap;
   </script>
 
-<script>
-  const script = document.createElement("script");
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${window.APP_CONFIG.GOOGLE_MAPS_API_KEY}&v=weekly&callback=initMap&libraries=marker`;
-  script.async = true;
-  document.head.appendChild(script);
-</script>
+  <script>
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${window.APP_CONFIG.GOOGLE_MAPS_API_KEY}&v=weekly&callback=initMap&libraries=marker`;
+    script.async = true;
+    document.head.appendChild(script);
+  </script>
 </body>
 </html>
