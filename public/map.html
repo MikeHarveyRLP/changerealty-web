@@ -267,7 +267,7 @@
       }).join("");
 
       container.querySelectorAll(".listing").forEach(card => {
-        card.addEventListener("click", () => {
+        card.addEventListener("gmp-click", () => {
           const id = card.dataset.id;
           const marker = markerById.get(id);
           const listing = lastListings.find(x => getListingId(x) === id);
@@ -376,6 +376,37 @@
       fetchTimer = setTimeout(loadListingsForMap, 350);
     }
 
+function centerOnUserLocation() {
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      map.setCenter(userPos);
+      map.setZoom(12);
+
+      const userMarker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: userPos,
+        title: "Your location",
+        gmpClickable: false
+      });
+    },
+    () => {
+      // Keep Waterloo default if user declines or location fails
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 8000,
+      maximumAge: 300000
+    }
+  );
+}
+
     async function initMap() {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps");
       await google.maps.importLibrary("marker");
@@ -390,10 +421,11 @@
       });
 
       infoWindow = new InfoWindow();
-      map.addListener("idle", debounceLoad);
+centerOnUserLocation();      
+map.addListener("idle", debounceLoad);
 
-      document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
-      document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+      document.getElementById("applyFiltersBtn").addEventListener("gmp-click", loadListingsForMap);
+      document.getElementById("resetFiltersBtn").addEventListener("gmp-click", () => {
         document.getElementById("mode").value = "sale";
         document.getElementById("minPrice").value = "";
         document.getElementById("maxPrice").value = "";
@@ -407,9 +439,8 @@
 
 <script>
   const script = document.createElement("script");
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${window.APP_CONFIG.GOOGLE_MAPS_API_KEY}&v=weekly&callback=initMap&libraries=marker`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${window.APP_CONFIG.GOOGLE_MAPS_API_KEY}&v=weekly&callback=initMap&libraries=marker&loading=async`;
   script.async = true;
-  script.defer = true;
   document.head.appendChild(script);
 </script>
 </body>
