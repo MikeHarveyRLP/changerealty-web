@@ -417,12 +417,18 @@
     }
 
     function buildDetailsUrl(listing) {
+  console.log("DETAILS URL LISTING", listing);
+
   if (listing.listing_key) {
     return `/listing.html?key=${encodeURIComponent(listing.listing_key)}`;
   }
 
   if (listing.listingKey) {
     return `/listing.html?key=${encodeURIComponent(listing.listingKey)}`;
+  }
+
+  if (listing.ListingKey) {
+    return `/listing.html?key=${encodeURIComponent(listing.ListingKey)}`;
   }
 
   return "#";
@@ -568,6 +574,7 @@
 
         const payload = await resp.json();
         const rawListings = Array.isArray(payload) ? payload : (payload.listings || payload.data || []);
+        console.log("FIRST LISTING", rawListings[0]);
         const listings = applyClientFilters(rawListings).filter(x => getLatLng(x));
 
         lastListings = listings;
