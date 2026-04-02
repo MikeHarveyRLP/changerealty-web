@@ -417,8 +417,14 @@
     }
 
     function buildDetailsUrl(listing) {
-  const key = listing.listing_key ?? listing.listingKey ?? listing.id;
-  if (key) return `/listing.html?key=${encodeURIComponent(key)}`;
+  if (listing.listing_key) {
+    return `/listing.html?key=${encodeURIComponent(listing.listing_key)}`;
+  }
+
+  if (listing.listingKey) {
+    return `/listing.html?key=${encodeURIComponent(listing.listingKey)}`;
+  }
+
   return "#";
 }
 
