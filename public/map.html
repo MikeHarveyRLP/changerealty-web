@@ -417,21 +417,7 @@
     }
 
     function buildDetailsUrl(listing) {
-  console.log("DETAILS URL LISTING", listing);
-
-  if (listing.listing_key) {
-    return `/listing.html?key=${encodeURIComponent(listing.listing_key)}`;
-  }
-
-  if (listing.listingKey) {
-    return `/listing.html?key=${encodeURIComponent(listing.listingKey)}`;
-  }
-
-  if (listing.ListingKey) {
-    return `/listing.html?key=${encodeURIComponent(listing.ListingKey)}`;
-  }
-
-  return "#";
+  return `/listing.html?key=${encodeURIComponent(listing.listing_key)}`;
 }
 
     function escapeHtml(value) {
@@ -543,6 +529,7 @@
       const cityProvince = getCityProvince(listing);
       const bedsBaths = getBedsBaths(listing);
       const detailsUrl = buildDetailsUrl(listing);
+console.log("DETAILS URL", detailsUrl, listing);
       const remarks = getRemarks(listing);
       const shortRemarks = remarks.length > 180 ? remarks.slice(0, 180).trim() + "…" : remarks;
 
