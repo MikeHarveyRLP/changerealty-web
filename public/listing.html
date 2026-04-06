@@ -109,6 +109,54 @@
       white-space:pre-wrap;
     }
 
+.gallery-wrap{
+  margin-bottom:16px;
+}
+
+.gallery-main{
+  width:100%;
+  height:420px;
+  border-radius:12px;
+  overflow:hidden;
+  background:#e5e7eb;
+  margin-bottom:10px;
+}
+
+.gallery-main img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.gallery-thumbs{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+
+.gallery-thumb{
+  width:92px;
+  height:72px;
+  border-radius:10px;
+  overflow:hidden;
+  border:2px solid transparent;
+  background:#e5e7eb;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+
+.gallery-thumb.active{
+  border-color:#111827;
+}
+
+.gallery-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
     .side-card{
       padding:20px;
       position:sticky;
@@ -255,17 +303,36 @@
       }).format(n);
     }
 
-function getPhotoUrl(listing) {
+function getPhotoItems(listing) {
+  const media = listing.raw?.Media;
+  if (!Array.isArray(media)) return [];
+
+  return media
+    .filter(item => item && item.MediaURL)
+    .filter(item => {
+      const category = String(item.MediaCategory || "").toLowerCase();
+      return !category || category.includes("photo");
+    })
+    .sort((a, b) => {
+      const aPreferred = a.PreferredPhotoYN ? 1 : 0;
+      const bPreferred = b.PreferredPhotoYN ? 1 : 0;
+
+      if (aPreferred !== bPreferred) {
+        return bPreferred - aPreferred;
+      }
+
+      const aOrder = Number(a.Order ?? 999999);
+      const bOrder = Number(b.Order ?? 999999);
+      return aOrder - bOrder;
+    });
+}
+
+function getPrimaryPhotoUrl(listing) {
   if (listing.photo) return listing.photo;
 
-  const media = listing.raw?.Media;
-  if (Array.isArray(media) && media.length > 0) {
-    const firstPhoto = media.find(item => item && item.MediaURL);
-    if (firstPhoto && firstPhoto.MediaURL) {
-      return firstPhoto.MediaURL;
-    }
-  }
-
+  const photos = getPhotoItems(listing);
+  return photos.length ? photos[0].MediaURL : null;
+}
   return null;
 }
 
@@ -305,7 +372,8 @@ function getPhotoUrl(listing) {
 
     function renderListing(listing) {
       const price = formatPrice(listing);
-      const photoUrl = getPhotoUrl(listing);
+      const photoItems = getPhotoItems(listing);
+      const photoUrl = getPrimaryPhotoUrl(listing);
       const address = getAddress(listing);
       const cityProvincePostal = getCityProvincePostal(listing);
       const remarks = getRemarks(listing);
@@ -322,30 +390,42 @@ function getPhotoUrl(listing) {
       document.getElementById("content").innerHTML = `
         <div class="hero">
           <div class="card main-card">
-  ${photoUrl ? `
-    <div style="margin-bottom:16px;">
-      <img
-        src="${escapeHtml(photoUrl)}"
-        alt="Listing photo"
-        style="width:100%;height:420px;object-fit:cover;border-radius:12px;display:block;"
-      />
+
+${photoItems.length ? `
+  <div class="gallery-wrap">
+    <div class="gallery-main">
+      <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" />
     </div>
-  ` : `
-    <div style="
-      width:100%;
-      height:320px;
-      background:#e5e7eb;
-      border-radius:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#6b7280;
-      margin-bottom:16px;
-      font-size:14px;
-    ">
-      No photo available
+    <div class="gallery-thumbs">
+      ${photoItems.map((item, index) => `
+        <button
+          type="button"
+          class="gallery-thumb ${index === 0 ? "active" : ""}"
+          data-photo-url="${escapeHtml(item.MediaURL)}"
+          aria-label="View listing photo ${index + 1}"
+        >
+          <img src="${escapeHtml(item.MediaURL)}" alt="Listing thumbnail ${index + 1}" />
+        </button>
+      `).join("")}
     </div>
-  `}
+  </div>
+` : `
+  <div style="
+    width:100%;
+    height:320px;
+    background:#e5e7eb;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b7280;
+    margin-bottom:16px;
+    font-size:14px;
+  ">
+    No photo available
+  </div>
+`}
+
   <div class="price">${escapeHtml(price)}</div>
             <div class="address">${escapeHtml(address)}</div>
             <div class="subline">${escapeHtml(cityProvincePostal)}</div>
@@ -421,7 +501,20 @@ function getPhotoUrl(listing) {
         document.getElementById("content").innerHTML = `
           <div class="status error">Missing listing key in URL.</div>
         `;
-        return;
+        return;const mainPhoto = document.getElementById("mainListingPhoto");
+const thumbButtons = document.querySelectorAll(".gallery-thumb");
+
+thumbButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const url = btn.getAttribute("data-photo-url");
+    if (!url || !mainPhoto) return;
+
+    mainPhoto.src = url;
+
+    thumbButtons.forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+  });
+});
       }
 
       try {
