@@ -303,14 +303,30 @@
       }).format(n);
     }
 
+function getRawObject(listing) {
+  if (!listing.raw) return null;
+
+  if (typeof listing.raw === "string") {
+    try {
+      return JSON.parse(listing.raw);
+    } catch {
+      return null;
+    }
+  }
+
+  return listing.raw;
+}
+
 function getPhotoItems(listing) {
-  const media = listing.raw?.Media;
+  const raw = getRawObject(listing);
+  const media = raw?.Media || raw?.media;
+
   if (!Array.isArray(media)) return [];
 
   return media
-    .filter(item => item && item.MediaURL)
+    .filter(item => item && (item.MediaURL || item.mediaUrl))
     .filter(item => {
-      const category = String(item.MediaCategory || "").toLowerCase();
+      const category = String(item.MediaCategory || item.mediaCategory || "").toLowerCase();
       return !category || category.includes("photo");
     })
     .sort((a, b) => {
@@ -328,10 +344,14 @@ function getPhotoItems(listing) {
 }
 
 function getPrimaryPhotoUrl(listing) {
+  const photos = getPhotoItems(listing);
+  if (photos.length) {
+    return photos[0].MediaURL || photos[0].mediaUrl || null;
+  }
+
   if (listing.photo) return listing.photo;
 
-  const photos = getPhotoItems(listing);
-  return photos.length ? photos[0].MediaURL : null;
+  return null;
 }
 
     function getAddress(listing) {
@@ -398,10 +418,10 @@ function renderListing(listing) {
                 <button
                   type="button"
                   class="gallery-thumb ${index === 0 ? "active" : ""}"
-                  data-photo-url="${escapeHtml(item.MediaURL)}"
+                  data-photo-url="${escapeHtml(item.MediaURL || item.mediaUrl)}"
                   aria-label="View listing photo ${index + 1}"
                 >
-                  <img src="${escapeHtml(item.MediaURL)}" alt="Listing thumbnail ${index + 1}" />
+                  <img src="${escapeHtml(item.MediaURL || item.mediaUrl)}" alt="Listing thumbnail ${index + 1}" />
                 </button>
               `).join("")}
             </div>
