@@ -255,6 +255,20 @@
       }).format(n);
     }
 
+function getPhotoUrl(listing) {
+  if (listing.photo) return listing.photo;
+
+  const media = listing.raw?.Media;
+  if (Array.isArray(media) && media.length > 0) {
+    const firstPhoto = media.find(item => item && item.MediaURL);
+    if (firstPhoto && firstPhoto.MediaURL) {
+      return firstPhoto.MediaURL;
+    }
+  }
+
+  return null;
+}
+
     function getAddress(listing) {
       return (
         listing.address_full ||
@@ -291,6 +305,7 @@
 
     function renderListing(listing) {
       const price = formatPrice(listing);
+      const photoUrl = getPhotoUrl(listing);
       const address = getAddress(listing);
       const cityProvincePostal = getCityProvincePostal(listing);
       const remarks = getRemarks(listing);
@@ -307,7 +322,31 @@
       document.getElementById("content").innerHTML = `
         <div class="hero">
           <div class="card main-card">
-            <div class="price">${escapeHtml(price)}</div>
+  ${photoUrl ? `
+    <div style="margin-bottom:16px;">
+      <img
+        src="${escapeHtml(photoUrl)}"
+        alt="Listing photo"
+        style="width:100%;height:420px;object-fit:cover;border-radius:12px;display:block;"
+      />
+    </div>
+  ` : `
+    <div style="
+      width:100%;
+      height:320px;
+      background:#e5e7eb;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#6b7280;
+      margin-bottom:16px;
+      font-size:14px;
+    ">
+      No photo available
+    </div>
+  `}
+  <div class="price">${escapeHtml(price)}</div>
             <div class="address">${escapeHtml(address)}</div>
             <div class="subline">${escapeHtml(cityProvincePostal)}</div>
 
