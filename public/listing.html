@@ -333,8 +333,6 @@ function getPrimaryPhotoUrl(listing) {
   const photos = getPhotoItems(listing);
   return photos.length ? photos[0].MediaURL : null;
 }
-  return null;
-}
 
     function getAddress(listing) {
       return (
@@ -370,170 +368,170 @@ function getPrimaryPhotoUrl(listing) {
         .replaceAll("'", "&#39;");
     }
 
-    function renderListing(listing) {
-      const price = formatPrice(listing);
-      const photoItems = getPhotoItems(listing);
-      const photoUrl = getPrimaryPhotoUrl(listing);
-      const address = getAddress(listing);
-      const cityProvincePostal = getCityProvincePostal(listing);
-      const remarks = getRemarks(listing);
-      const beds = getBeds(listing);
-      const baths = getBaths(listing);
-      const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
-      const status = listing.status ?? "—";
-      const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
-      const lat = listing.lat ?? "—";
-      const lng = listing.lng ?? "—";
+function renderListing(listing) {
+  const price = formatPrice(listing);
+  const photoItems = getPhotoItems(listing);
+  const photoUrl = getPrimaryPhotoUrl(listing);
+  const address = getAddress(listing);
+  const cityProvincePostal = getCityProvincePostal(listing);
+  const remarks = getRemarks(listing);
+  const beds = getBeds(listing);
+  const baths = getBaths(listing);
+  const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
+  const status = listing.status ?? "—";
+  const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
+  const lat = listing.lat ?? "—";
+  const lng = listing.lng ?? "—";
 
-      document.title = `${address} | Change Realty`;
+  document.title = `${address} | Change Realty`;
 
-      document.getElementById("content").innerHTML = `
-        <div class="hero">
-          <div class="card main-card">
-
-${photoItems.length ? `
-  <div class="gallery-wrap">
-    <div class="gallery-main">
-      <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" />
-    </div>
-    <div class="gallery-thumbs">
-      ${photoItems.map((item, index) => `
-        <button
-          type="button"
-          class="gallery-thumb ${index === 0 ? "active" : ""}"
-          data-photo-url="${escapeHtml(item.MediaURL)}"
-          aria-label="View listing photo ${index + 1}"
-        >
-          <img src="${escapeHtml(item.MediaURL)}" alt="Listing thumbnail ${index + 1}" />
-        </button>
-      `).join("")}
-    </div>
-  </div>
-` : `
-  <div style="
-    width:100%;
-    height:320px;
-    background:#e5e7eb;
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#6b7280;
-    margin-bottom:16px;
-    font-size:14px;
-  ">
-    No photo available
-  </div>
-`}
-
-  <div class="price">${escapeHtml(price)}</div>
-            <div class="address">${escapeHtml(address)}</div>
-            <div class="subline">${escapeHtml(cityProvincePostal)}</div>
-
-            <div class="badges">
-              <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
-              <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
-              <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
-              <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
+  document.getElementById("content").innerHTML = `
+    <div class="hero">
+      <div class="card main-card">
+        ${photoItems.length ? `
+          <div class="gallery-wrap">
+            <div class="gallery-main">
+              <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" />
             </div>
-
-            <div class="remarks">${escapeHtml(remarks)}</div>
+            <div class="gallery-thumbs">
+              ${photoItems.map((item, index) => `
+                <button
+                  type="button"
+                  class="gallery-thumb ${index === 0 ? "active" : ""}"
+                  data-photo-url="${escapeHtml(item.MediaURL)}"
+                  aria-label="View listing photo ${index + 1}"
+                >
+                  <img src="${escapeHtml(item.MediaURL)}" alt="Listing thumbnail ${index + 1}" />
+                </button>
+              `).join("")}
+            </div>
           </div>
-
-          <div class="card side-card">
-            <h2>Interested in this home?</h2>
-            <p>Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.</p>
-
-            <a class="cta-btn primary" href="/contact">Book a showing</a>
-            <a class="cta-btn secondary" href="/contact">Request more info</a>
-            <a class="cta-btn secondary" href="/map">See more listings</a>
+        ` : `
+          <div style="
+            width:100%;
+            height:320px;
+            background:#e5e7eb;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#6b7280;
+            margin-bottom:16px;
+            font-size:14px;
+          ">
+            No photo available
           </div>
+        `}
+
+        <div class="price">${escapeHtml(price)}</div>
+        <div class="address">${escapeHtml(address)}</div>
+        <div class="subline">${escapeHtml(cityProvincePostal)}</div>
+
+        <div class="badges">
+          <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
+          <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
+          <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
+          <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
         </div>
 
-        <div class="details-grid">
-          <div class="card details-card">
-            <h3>Property details</h3>
-            <div class="detail-row">
-              <span class="label">Status</span>
-              ${escapeHtml(String(status))}
-            </div>
-            <div class="detail-row">
-              <span class="label">MLS® Number</span>
-              ${escapeHtml(String(mls))}
-            </div>
-            <div class="detail-row">
-              <span class="label">Bedrooms</span>
-              ${escapeHtml(String(beds))}
-            </div>
-            <div class="detail-row">
-              <span class="label">Bathrooms</span>
-              ${escapeHtml(String(baths))}
-            </div>
-          </div>
+        <div class="remarks">${escapeHtml(remarks)}</div>
+      </div>
 
-          <div class="card details-card">
-            <h3>Location & brokerage</h3>
-            <div class="detail-row">
-              <span class="label">Address</span>
-              ${escapeHtml(address)}
-            </div>
-            <div class="detail-row">
-              <span class="label">City / Province / Postal</span>
-              ${escapeHtml(cityProvincePostal)}
-            </div>
-            <div class="detail-row">
-              <span class="label">Brokerage</span>
-              ${escapeHtml(String(brokerage))}
-            </div>
-            <div class="detail-row">
-              <span class="label">Coordinates</span>
-              ${escapeHtml(String(lat))}, ${escapeHtml(String(lng))}
-            </div>
-          </div>
+      <div class="card side-card">
+        <h2>Interested in this home?</h2>
+        <p>Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.</p>
+
+        <a class="cta-btn primary" href="/contact">Book a showing</a>
+        <a class="cta-btn secondary" href="/contact">Request more info</a>
+        <a class="cta-btn secondary" href="/map">See more listings</a>
+      </div>
+    </div>
+
+    <div class="details-grid">
+      <div class="card details-card">
+        <h3>Property details</h3>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          ${escapeHtml(String(status))}
         </div>
-      `;
-    }
+        <div class="detail-row">
+          <span class="label">MLS® Number</span>
+          ${escapeHtml(String(mls))}
+        </div>
+        <div class="detail-row">
+          <span class="label">Bedrooms</span>
+          ${escapeHtml(String(beds))}
+        </div>
+        <div class="detail-row">
+          <span class="label">Bathrooms</span>
+          ${escapeHtml(String(baths))}
+        </div>
+      </div>
 
-    async function loadListing() {
-      const key = getParam("key");
+      <div class="card details-card">
+        <h3>Location & brokerage</h3>
+        <div class="detail-row">
+          <span class="label">Address</span>
+          ${escapeHtml(address)}
+        </div>
+        <div class="detail-row">
+          <span class="label">City / Province / Postal</span>
+          ${escapeHtml(cityProvincePostal)}
+        </div>
+        <div class="detail-row">
+          <span class="label">Brokerage</span>
+          ${escapeHtml(String(brokerage))}
+        </div>
+        <div class="detail-row">
+          <span class="label">Coordinates</span>
+          ${escapeHtml(String(lat))}, ${escapeHtml(String(lng))}
+        </div>
+      </div>
+    </div>
+  `;
 
-      if (!key) {
-        document.getElementById("content").innerHTML = `
-          <div class="status error">Missing listing key in URL.</div>
-        `;
-        return;const mainPhoto = document.getElementById("mainListingPhoto");
-const thumbButtons = document.querySelectorAll(".gallery-thumb");
+  const mainPhoto = document.getElementById("mainListingPhoto");
+  const thumbButtons = document.querySelectorAll(".gallery-thumb");
 
-thumbButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const url = btn.getAttribute("data-photo-url");
-    if (!url || !mainPhoto) return;
+  thumbButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const url = btn.getAttribute("data-photo-url");
+      if (!url || !mainPhoto) return;
 
-    mainPhoto.src = url;
+      mainPhoto.src = url;
 
-    thumbButtons.forEach(x => x.classList.remove("active"));
-    btn.classList.add("active");
+      thumbButtons.forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+    });
   });
-});
-      }
+}
 
-      try {
-        const resp = await fetch(`${API_BASE}/api/listings/${encodeURIComponent(key)}`);
-        if (!resp.ok) {
-          throw new Error(`API returned ${resp.status}`);
-        }
+async function loadListing() {
+  const key = getParam("key");
 
-        const listing = await resp.json();
-        renderListing(listing);
-      } catch (err) {
-        console.error(err);
-        document.getElementById("content").innerHTML = `
-          <div class="status error">Could not load this listing.</div>
-        `;
-      }
+  if (!key) {
+    document.getElementById("content").innerHTML = `
+      <div class="status error">Missing listing key in URL.</div>
+    `;
+    return;
+  }
+
+  try {
+    const resp = await fetch(`${API_BASE}/api/listings/${encodeURIComponent(key)}`);
+    if (!resp.ok) {
+      throw new Error(`API returned ${resp.status}`);
     }
 
-    loadListing();
+    const listing = await resp.json();
+    renderListing(listing);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("content").innerHTML = `
+      <div class="status error">Could not load this listing.</div>
+    `;
+  }
+}
+
   </script>
 </body>
 </html>
