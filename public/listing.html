@@ -102,6 +102,22 @@
       font-weight:600;
     }
 
+.tour-button{
+  display:inline-block;
+  margin:0 0 20px;
+  padding:12px 16px;
+  background:#111827;
+  color:#fff;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+}
+
+.tour-button:hover{
+  background:#374151;
+}
+
     .remarks{
       font-size:15px;
       line-height:1.7;
@@ -111,24 +127,25 @@
 
 .gallery-wrap{
   margin-bottom:16px;
+  width:100%;
 }
 
 .gallery-main{
   width:100%;
-  max-width:100%;
   height:420px;
   border-radius:12px;
   overflow:hidden;
   background:#e5e7eb;
   margin-bottom:10px;
+  position:relative;
 }
 
 .gallery-main img{
   width:100%;
-  max-width:100%;
   height:100%;
-  object-fit:cover;
   display:block;
+  object-fit:cover;
+  object-position:center;
 }
 
 .gallery-thumbs{
@@ -147,6 +164,8 @@
   background:#e5e7eb;
   cursor:pointer;
   flex:0 0 auto;
+  padding:0;
+  appearance:none;
 }
 
 .gallery-thumb.active{
@@ -356,6 +375,25 @@ function getPrimaryPhotoUrl(listing) {
   return null;
 }
 
+function getVirtualTourUrl(listing) {
+  const raw = getRawObject(listing);
+  if (!raw) return null;
+
+  if (raw.VirtualTourURL) {
+    return raw.VirtualTourURL;
+  }
+
+  const media = raw.Media || raw.media || [];
+  if (!Array.isArray(media)) return null;
+
+  const tour = media.find(item => {
+    const category = String(item.MediaCategory || item.mediaCategory || "").toLowerCase();
+    return category.includes("virtual");
+  });
+
+  return tour?.MediaURL || tour?.mediaUrl || null;
+}
+
     function getAddress(listing) {
       return (
         listing.address_full ||
@@ -399,6 +437,7 @@ function renderListing(listing) {
   const remarks = getRemarks(listing);
   const beds = getBeds(listing);
   const baths = getBaths(listing);
+  const tourUrl = getVirtualTourUrl(listing);  
   const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
   const status = listing.status ?? "—";
   const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
@@ -413,7 +452,7 @@ function renderListing(listing) {
         ${photoItems.length ? `
           <div class="gallery-wrap">
             <div class="gallery-main">
-              <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" />
+              <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" loading="eager" />
             </div>
             <div class="gallery-thumbs">
               ${photoItems.map((item, index) => `
@@ -449,14 +488,20 @@ function renderListing(listing) {
         <div class="address">${escapeHtml(address)}</div>
         <div class="subline">${escapeHtml(cityProvincePostal)}</div>
 
-        <div class="badges">
-          <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
-          <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
-          <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
-          <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
-        </div>
+<div class="badges">
+  <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
+  <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
+  <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
+  <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
+</div>
 
-        <div class="remarks">${escapeHtml(remarks)}</div>
+${tourUrl ? `
+  <a href="${escapeHtml(tourUrl)}" target="_blank" rel="noopener noreferrer" class="tour-button">
+    View Virtual Tour
+  </a>
+` : ``}
+
+<div class="remarks">${escapeHtml(remarks)}</div>
       </div>
 
       <div class="card side-card">
