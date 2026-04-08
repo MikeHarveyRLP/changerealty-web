@@ -301,12 +301,12 @@ html, body{
 
       <div>
         <label>Min Price</label>
-        <input id="minPrice" type="number"/>
+        <input id="minPrice" type="text" placeholder="$500,000"/>
       </div>
 
       <div>
         <label>Max Price</label>
-        <input id="maxPrice" type="number"/>
+        <input id="maxPrice" type="text" placeholder="$1,000,000"/>
       </div>
 
       <div>
@@ -473,11 +473,11 @@ function formatCompactPrice(value) {
     return `$${Number.isInteger(m) ? m.toFixed(0) : m.toFixed(1)}M`;
   }
 
-  if (n >= 1000) {
+  if (n >= 100000) {
     return `$${Math.round(n / 1000)}K`;
   }
 
-  return `$${Math.round(n)}`;
+  return `$${n.toLocaleString("en-CA")}`;
 }
 
 function getMarkerLabel(listing) {
@@ -492,9 +492,8 @@ function getMarkerLabel(listing) {
 }
 
     function applyClientFilters(listings) {
-      const minPrice = Number(document.getElementById("minPrice").value || 0);
-      const maxPriceRaw = document.getElementById("maxPrice").value;
-      const maxPrice = maxPriceRaw ? Number(maxPriceRaw) : null;
+      const minPrice = parsePriceInput(document.getElementById("minPrice").value);
+const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
       const cityFilter = document.getElementById("cityFilter").value.trim().toLowerCase();
 
       return listings.filter(listing => {
@@ -516,8 +515,8 @@ function updatePageUrlFromFilters() {
   const params = new URLSearchParams();
 
   const mode = document.getElementById("mode").value;
-  const minPrice = document.getElementById("minPrice").value.trim();
-  const maxPrice = document.getElementById("maxPrice").value.trim();
+  const minPrice = parsePriceInput(document.getElementById("minPrice").value);
+const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
   const city = document.getElementById("cityFilter").value.trim();
 
   if (mode && mode !== "sale") params.set("mode", mode);
@@ -589,7 +588,7 @@ function loadFiltersFromUrl() {
           <div class="price">${escapeHtml(price)}</div>
           <div class="address">${escapeHtml(address)}</div>
           <div class="meta">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
-          <div class="remarks">${escapeHtml(shortRemarks || "Click for more details.")}</div>
+          <div class="remarks">${escapeHtml(shortRemarks || "")}</div>
           <a class="details-link" href="${escapeHtml(detailsUrl)}">View details</a>
         </div>
       </article>
@@ -771,13 +770,6 @@ function centerOnUserLocation() {
 
       map.setCenter(userPos);
       map.setZoom(12);
-
-      const userMarker = new google.maps.marker.AdvancedMarkerElement({
-        map,
-        position: userPos,
-        title: "Your location",
-        gmpClickable: false
-      });
     },
     () => {
       // Keep Waterloo default if user declines or location fails
@@ -788,6 +780,28 @@ function centerOnUserLocation() {
       maximumAge: 300000
     }
   );
+}
+
+function parsePriceInput(value) {
+  if (!value) return null;
+
+  const cleaned = String(value)
+    .replaceAll(",", "")
+    .replaceAll("$", "")
+    .trim()
+    .toLowerCase();
+
+  if (!cleaned) return null;
+
+  if (cleaned.endsWith("m")) {
+    return Number(cleaned.replace("m", "")) * 1000000;
+  }
+
+  if (cleaned.endsWith("k")) {
+    return Number(cleaned.replace("k", "")) * 1000;
+  }
+
+  return Number(cleaned);
 }
 
 function debounceLoad() {
