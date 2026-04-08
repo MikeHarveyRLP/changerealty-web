@@ -12,224 +12,209 @@
       --muted:#6b7280;
       --border:#e5e7eb;
       --accent:#111827;
+      --accent-2:#374151;
+      --soft:#f3f4f6;
       --shadow:0 10px 30px rgba(0,0,0,.08);
-      --radius:16px;
+      --radius:18px;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
 
-    html,body{
+    html, body{
       margin:0;
       padding:0;
-      font-family:Arial,Helvetica,sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       background:var(--bg);
       color:var(--text);
     }
 
+    body{
+      min-width:0;
+      overflow-x:hidden;
+    }
+
     .container{
-      max-width:1100px;
+      max-width:1480px;
       margin:0 auto;
-      padding:24px 16px 40px;
+      padding:22px 16px 40px;
     }
 
     .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
       margin-bottom:18px;
     }
 
     .back-link{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       text-decoration:none;
       color:var(--text);
       font-size:14px;
-      font-weight:600;
-      padding:10px 14px;
+      font-weight:700;
+      padding:11px 15px;
       border:1px solid var(--border);
       border-radius:12px;
       background:#fff;
     }
 
-.hero{
-  display:grid;
-  grid-template-columns:minmax(0, 1.4fr) minmax(280px, .9fr);
-  gap:18px;
-  align-items:start;
-}
+    .topbar-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-.hero > *{
-  min-width:0;
-}
+    .top-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:var(--text);
+      font-size:14px;
+      font-weight:700;
+      padding:11px 15px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+
+    .status{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .status.error{
+      color:#991b1b;
+      border-color:#fecaca;
+      background:#fff7f7;
+    }
+
+    .page-grid{
+      display:grid;
+      grid-template-columns:minmax(340px, .92fr) minmax(420px, 1.18fr);
+      gap:20px;
+      align-items:start;
+      min-width:0;
+    }
+
+    .column{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
+      min-width:0;
     }
 
-.card,
-.main-card,
-.side-card,
-.gallery-wrap,
-.gallery-main,
-.gallery-thumbs{
-  min-width:0;
-  max-width:100%;
-}
-
-    .main-card{
+    .details-card{
       padding:24px;
     }
 
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:7px 10px;
+      border-radius:999px;
+      background:#f3f4f6;
+      color:#374151;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
     .price{
-      font-size:38px;
-      font-weight:700;
-      margin:0 0 10px;
-      line-height:1.1;
+      font-size:42px;
+      line-height:1.06;
+      font-weight:800;
+      margin:0 0 12px;
     }
 
     .address{
-      font-size:24px;
-      font-weight:700;
+      font-size:30px;
+      line-height:1.18;
+      font-weight:800;
       margin:0 0 10px;
-      line-height:1.25;
+      word-break:break-word;
     }
 
     .subline{
-      font-size:15px;
       color:var(--muted);
+      font-size:16px;
+      line-height:1.5;
       margin:0 0 18px;
-      line-height:1.45;
+      word-break:break-word;
     }
 
     .badges{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-bottom:20px;
+      margin-bottom:18px;
     }
 
     .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       padding:10px 14px;
       border-radius:999px;
       background:#f3f4f6;
       font-size:14px;
-      font-weight:600;
+      font-weight:700;
+      color:#374151;
     }
-
-.tour-button{
-  display:inline-block;
-  margin:0 0 20px;
-  padding:12px 16px;
-  background:#111827;
-  color:#fff;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:700;
-  font-size:14px;
-}
-
-.tour-button:hover{
-  background:#374151;
-}
 
     .remarks{
       font-size:15px;
-      line-height:1.7;
-      color:var(--text);
+      line-height:1.75;
       white-space:pre-wrap;
+      color:var(--text);
     }
 
-.gallery-wrap{
-  width:100%;
-  max-width:100%;
-  min-width:0;
-  margin-bottom:16px;
-}
-
-.gallery-main{
-  width:100%;
-  max-width:100%;
-  min-width:0;
-  height:380px;
-  border-radius:12px;
-  overflow:hidden;
-  background:#e5e7eb;
-  margin-bottom:10px;
-  position:relative;
-}
-
-.gallery-main img{
-  display:block;
-  width:100%;
-  max-width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
-}
-
-.gallery-thumbs{
-  display:flex;
-  gap:10px;
-  max-width:100%;
-  min-width:0;
-  overflow-x:auto;
-  overflow-y:hidden;
-  padding-bottom:4px;
-}
-
-.gallery-thumb{
-  width:92px;
-  min-width:92px;
-  max-width:92px;
-  height:72px;
-  border-radius:10px;
-  overflow:hidden;
-  border:2px solid transparent;
-  background:#e5e7eb;
-  cursor:pointer;
-  flex:0 0 92px;
-  padding:0;
-  appearance:none;
-}
-.gallery-thumb.active{
-  border-color:#111827;
-}
-
-.gallery-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-    .side-card{
-      padding:20px;
-      position:sticky;
-      top:20px;
+    .section-title{
+      margin:0 0 14px;
+      font-size:20px;
+      line-height:1.2;
     }
 
-    .side-card h2{
-      margin:0 0 8px;
-      font-size:22px;
-    }
-
-    .side-card p{
-      margin:0 0 16px;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
+    .cta-stack{
+      display:grid;
+      gap:10px;
     }
 
     .cta-btn{
-      display:block;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       width:100%;
-      text-align:center;
-      text-decoration:none;
-      padding:14px 16px;
+      min-height:46px;
+      padding:12px 16px;
       border-radius:12px;
-      font-weight:700;
-      font-size:15px;
-      margin-bottom:10px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:800;
       border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
     }
 
     .cta-btn.primary{
@@ -246,69 +231,369 @@
     .details-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:18px;
-      margin-top:18px;
+      gap:16px;
     }
 
-    .details-card{
+    .details-subcard{
       padding:20px;
     }
 
-    .details-card h3{
-      margin:0 0 12px;
+    .details-subcard h3{
+      margin:0 0 14px;
       font-size:18px;
     }
 
     .detail-row{
-      padding:10px 0;
-      border-bottom:1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      padding:12px 0;
+      border-top:1px solid var(--border);
       font-size:14px;
       line-height:1.45;
+      word-break:break-word;
     }
 
-    .detail-row:last-child{
-      border-bottom:none;
-      padding-bottom:0;
+    .detail-row:first-of-type{
+      border-top:none;
+      padding-top:0;
     }
 
     .label{
       color:var(--muted);
-      display:block;
-      margin-bottom:4px;
       font-size:12px;
-      text-transform:uppercase;
+      font-weight:800;
       letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
-    .status{
-      font-size:14px;
+    .mortgage-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .field label{
+      display:block;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.03em;
+      text-transform:uppercase;
       color:var(--muted);
-      padding:20px;
+      margin-bottom:6px;
     }
 
-    .error{
-      color:#991b1b;
+    .field input,
+    .field select{
+      width:100%;
+      height:44px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:0 12px;
+      font-size:14px;
+      background:#fff;
+      color:var(--text);
     }
 
-    @media (max-width: 900px){
-      .hero{
+    .mortgage-result{
+      margin:6px 0 16px;
+      padding:16px;
+      border-radius:14px;
+      background:#f9fafb;
+      border:1px solid var(--border);
+    }
+
+    .mortgage-result .small{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .mortgage-payment{
+      font-size:30px;
+      font-weight:800;
+      line-height:1.1;
+      margin:0 0 6px;
+    }
+
+    .mortgage-note{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .media-card{
+      padding:18px;
+    }
+
+    .gallery-wrap{
+      width:100%;
+      min-width:0;
+    }
+
+    .gallery-main{
+      position:relative;
+      width:100%;
+      height:560px;
+      border-radius:16px;
+      overflow:hidden;
+      background:#e5e7eb;
+    }
+
+    .gallery-main img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+    }
+
+    .gallery-empty{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+      padding:18px;
+    }
+
+    .gallery-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:999px;
+      background:rgba(17,24,39,.82);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      font-weight:800;
+      z-index:2;
+    }
+
+    .gallery-nav:hover{
+      background:rgba(17,24,39,.95);
+    }
+
+    .gallery-nav.prev{ left:12px; }
+    .gallery-nav.next{ right:12px; }
+
+    .gallery-count{
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      z-index:2;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(17,24,39,.82);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.03em;
+    }
+
+    .gallery-thumbs{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:12px 0 2px;
+      scroll-behavior:smooth;
+    }
+
+    .gallery-thumb{
+      width:110px;
+      height:82px;
+      min-width:110px;
+      border:2px solid transparent;
+      border-radius:12px;
+      padding:0;
+      overflow:hidden;
+      background:#e5e7eb;
+      cursor:pointer;
+      appearance:none;
+    }
+
+    .gallery-thumb.active{
+      border-color:#111827;
+    }
+
+    .gallery-thumb img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+    }
+
+    .tour-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .tour-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:12px 16px;
+      border-radius:12px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:800;
+      border:none;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+    }
+
+    .tour-btn.secondary{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    .tour-note{
+      margin:12px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .tour-panel{
+      margin-top:16px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    .tour-panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      background:#f9fafb;
+    }
+
+    .tour-panel-title{
+      font-size:15px;
+      font-weight:800;
+    }
+
+    .tour-close{
+      border:none;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .tour-frame-wrap{
+      height:660px;
+      background:#eef2f7;
+    }
+
+    .tour-frame{
+      width:100%;
+      height:100%;
+      border:none;
+      display:block;
+      background:#fff;
+    }
+
+    .tour-panel-foot{
+      padding:12px 16px 16px;
+      border-top:1px solid var(--border);
+      background:#fff;
+    }
+
+    .tour-panel-foot p{
+      margin:0 0 10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .location-map{
+      width:100%;
+      height:300px;
+      border:none;
+      border-radius:14px;
+      display:block;
+      background:#e5e7eb;
+    }
+
+    .map-actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    @media (max-width: 1160px){
+      .page-grid{
         grid-template-columns:1fr;
       }
 
-      .side-card{
-        position:static;
+      .gallery-main{
+        height:500px;
       }
+    }
 
-      .details-grid{
-        grid-template-columns:1fr;
+    @media (max-width: 760px){
+      .container{
+        padding:16px 12px 28px;
       }
 
       .price{
-        font-size:30px;
+        font-size:34px;
       }
 
       .address{
-        font-size:22px;
+        font-size:24px;
+      }
+
+      .details-grid,
+      .mortgage-grid{
+        grid-template-columns:1fr;
+      }
+
+      .gallery-main{
+        height:360px;
+      }
+
+      .gallery-thumb{
+        width:96px;
+        min-width:96px;
+        height:74px;
+      }
+
+      .tour-frame-wrap{
+        height:420px;
       }
     }
   </style>
@@ -317,6 +602,11 @@
   <div class="container">
     <div class="topbar">
       <a class="back-link" href="/map">← Back to map</a>
+
+      <div class="topbar-actions">
+        <a class="top-btn" href="/listings.html">All listings</a>
+        <a class="top-btn" href="/contact">Contact</a>
+      </div>
     </div>
 
     <div id="content">
@@ -326,20 +616,45 @@
 
   <script src="/config.js"></script>
   <script>
-    const API_BASE = window.APP_CONFIG.API_BASE;
+    const API_BASE = window.APP_CONFIG?.API_BASE || "";
+
+    let currentPhotoIndex = 0;
+    let currentPhotos = [];
+    let activeTourUrl = null;
 
     function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
     }
 
     function formatPrice(listing) {
       const price = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
       if (price === null || price === undefined || price === "") {
-        return listing.is_lease ? "For Lease" : "Price on request";
+        if (listing.is_lease) {
+          const leaseAmount = listing.lease_amount ?? listing.leaseAmount ?? null;
+          if (leaseAmount) {
+            return `${new Intl.NumberFormat("en-CA", {
+              style: "currency",
+              currency: "CAD",
+              maximumFractionDigits: 0
+            }).format(Number(leaseAmount))}/month`;
+          }
+          return "For Lease";
+        }
+        return "Price on request";
       }
+
       const n = Number(price);
       if (Number.isNaN(n)) return String(price);
+
       return new Intl.NumberFormat("en-CA", {
         style: "currency",
         currency: "CAD",
@@ -347,125 +662,103 @@
       }).format(n);
     }
 
-function getRawObject(listing) {
-  if (!listing.raw) return null;
-
-  if (typeof listing.raw === "string") {
-    try {
-      return JSON.parse(listing.raw);
-    } catch {
-      return null;
+    function formatMoney(value) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return "";
+      return new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: "CAD",
+        maximumFractionDigits: 0
+      }).format(n);
     }
-  }
 
-  return listing.raw;
-}
+    function parseMoney(value) {
+      if (value === null || value === undefined) return null;
 
-function getPhotoItems(listing) {
-  const raw = getRawObject(listing);
-  const media = raw?.Media || raw?.media;
+      const cleaned = String(value)
+        .replaceAll("$", "")
+        .replaceAll(",", "")
+        .trim()
+        .toLowerCase();
 
-  if (!Array.isArray(media)) return [];
+      if (!cleaned) return null;
 
-  return media
-    .filter(item => item && (item.MediaURL || item.mediaUrl))
-    .filter(item => {
-      const category = String(item.MediaCategory || item.mediaCategory || "").toLowerCase();
-      return !category || category.includes("photo");
-    })
-    .sort((a, b) => {
-      const aPreferred = a.PreferredPhotoYN ? 1 : 0;
-      const bPreferred = b.PreferredPhotoYN ? 1 : 0;
-
-      if (aPreferred !== bPreferred) {
-        return bPreferred - aPreferred;
+      if (cleaned.endsWith("m")) {
+        return Number(cleaned.slice(0, -1)) * 1000000;
       }
 
-      const aOrder = Number(a.Order ?? 999999);
-      const bOrder = Number(b.Order ?? 999999);
-      return aOrder - bOrder;
-    });
-}
+      if (cleaned.endsWith("k")) {
+        return Number(cleaned.slice(0, -1)) * 1000;
+      }
 
-function getPrimaryPhotoUrl(listing) {
-  const photos = getPhotoItems(listing);
-  if (photos.length) {
-    return photos[0].MediaURL || photos[0].mediaUrl || null;
-  }
-
-  if (listing.photo) return listing.photo;
-
-  return null;
-}
-
-function getVirtualTourUrl(listing) {
-  const raw = getRawObject(listing);
-  if (!raw) return null;
-
-  const directCandidates = [
-    raw.VirtualTourURL,
-    raw.VirtualTourUrl,
-    raw.VideoURL,
-    raw.VideoUrl,
-    raw.MultimediaLink,
-    raw.MultimediaURL,
-    raw.MultimediaUrl,
-    raw.AlternateURL,
-    raw.AlternateUrl
-  ].filter(Boolean);
-
-  if (directCandidates.length) {
-    return directCandidates[0];
-  }
-
-  const media = raw.Media || raw.media || [];
-  if (Array.isArray(media)) {
-    const match = media.find(item => {
-      const category = String(item?.MediaCategory || item?.mediaCategory || "").toLowerCase();
-      const description = String(
-        item?.MediaDescription ||
-        item?.mediaDescription ||
-        item?.LongDescription ||
-        item?.longDescription ||
-        item?.ShortDescription ||
-        item?.shortDescription ||
-        ""
-      ).toLowerCase();
-      const url = String(item?.MediaURL || item?.mediaUrl || "").toLowerCase();
-
-      const text = `${category} ${description} ${url}`;
-
-      return (
-        text.includes("virtual") ||
-        text.includes("tour") ||
-        text.includes("matterport") ||
-        text.includes("youriguide") ||
-        text.includes("video") ||
-        text.includes("vimeo") ||
-        text.includes("youtube") ||
-        text.includes("youtu.be")
-      );
-    });
-
-    if (match) {
-      return match.MediaURL || match.mediaUrl || null;
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
     }
-  }
 
-  return null;
-}
+    function getRawObject(listing) {
+      if (!listing || !listing.raw) return null;
+
+      if (typeof listing.raw === "string") {
+        try {
+          return JSON.parse(listing.raw);
+        } catch {
+          return null;
+        }
+      }
+
+      return listing.raw;
+    }
+
+    function getPhotoItems(listing) {
+      const raw = getRawObject(listing);
+      const media = raw?.Media || raw?.media;
+
+      if (!Array.isArray(media)) return [];
+
+      return media
+        .filter(item => item && (item.MediaURL || item.mediaUrl))
+        .filter(item => {
+          const category = String(item.MediaCategory || item.mediaCategory || "").toLowerCase();
+          return !category || category.includes("photo");
+        })
+        .sort((a, b) => {
+          const aPreferred = a.PreferredPhotoYN ? 1 : 0;
+          const bPreferred = b.PreferredPhotoYN ? 1 : 0;
+          if (aPreferred !== bPreferred) return bPreferred - aPreferred;
+
+          const aOrder = Number(a.Order ?? 999999);
+          const bOrder = Number(b.Order ?? 999999);
+          return aOrder - bOrder;
+        })
+        .map(item => ({
+          url: item.MediaURL || item.mediaUrl || "",
+          alt: item.LongDescription || item.longDescription || "Listing photo"
+        }))
+        .filter(item => item.url);
+    }
+
+    function getPrimaryPhotoUrl(listing) {
+      const photos = getPhotoItems(listing);
+      if (photos.length) return photos[0].url;
+      if (listing.photo) return listing.photo;
+      if (listing.photo_url) return listing.photo_url;
+      if (listing.thumbnail) return listing.thumbnail;
+      return null;
+    }
 
     function getAddress(listing) {
       return (
         listing.address_full ||
         listing.addressFull ||
-        [listing.street_number, listing.street_name, listing.city, listing.province].filter(Boolean).join(" ") ||
+        [listing.street_number, listing.street_name].filter(Boolean).join(" ") ||
         "Address unavailable"
       );
     }
 
     function getCityProvincePostal(listing) {
-      return [listing.city, listing.province, listing.postal_code].filter(Boolean).join(", ");
+      return [listing.city, listing.province, listing.postal_code]
+        .filter(Boolean)
+        .join(", ");
     }
 
     function getBeds(listing) {
@@ -480,188 +773,584 @@ function getVirtualTourUrl(listing) {
       return listing.public_remarks || listing.publicRemarks || listing.remarks || "No remarks available.";
     }
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
+    function getStatusLabel(listing) {
+      const rawStatus = String(listing.status ?? "").trim().toLowerCase();
+      if (!rawStatus || rawStatus === "active") {
+        return listing.is_lease ? "For Lease" : "For Sale";
+      }
+      return rawStatus;
     }
 
-function renderListing(listing) {
-  const price = formatPrice(listing);
-  const photoItems = getPhotoItems(listing);
-  const photoUrl = getPrimaryPhotoUrl(listing);
-  const address = getAddress(listing);
-  const cityProvincePostal = getCityProvincePostal(listing);
-  const remarks = getRemarks(listing);
-  const beds = getBeds(listing);
-  const baths = getBaths(listing);
-  const tourUrl = getVirtualTourUrl(listing);
-  console.log("TOUR URL:", tourUrl, listing);  
-  const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
-  const status = listing.status ?? "—";
-  const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
-  const lat = listing.lat ?? "—";
-  const lng = listing.lng ?? "—";
-
-  document.title = `${address} | Change Realty`;
-
-  document.getElementById("content").innerHTML = `
-    <div class="hero">
-      <div class="card main-card">
-        ${photoItems.length ? `
-          <div class="gallery-wrap">
-            <div class="gallery-main">
-              <img id="mainListingPhoto" src="${escapeHtml(photoUrl)}" alt="Listing photo" loading="eager" />
-            </div>
-            <div class="gallery-thumbs">
-              ${photoItems.map((item, index) => `
-                <button
-                  type="button"
-                  class="gallery-thumb ${index === 0 ? "active" : ""}"
-                  data-photo-url="${escapeHtml(item.MediaURL || item.mediaUrl)}"
-                  aria-label="View listing photo ${index + 1}"
-                >
-                  <img src="${escapeHtml(item.MediaURL || item.mediaUrl)}" alt="Listing thumbnail ${index + 1}" />
-                </button>
-              `).join("")}
-            </div>
-          </div>
-        ` : `
-          <div style="
-            width:100%;
-            height:320px;
-            background:#e5e7eb;
-            border-radius:12px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#6b7280;
-            margin-bottom:16px;
-            font-size:14px;
-          ">
-            No photo available
-          </div>
-        `}
-
-        <div class="price">${escapeHtml(price)}</div>
-        <div class="address">${escapeHtml(address)}</div>
-        <div class="subline">${escapeHtml(cityProvincePostal)}</div>
-
-<div class="badges">
-  <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
-  <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
-  <div class="badge">${listing.is_lease ? "For Lease" : "For Sale"}</div>
-  <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
-</div>
-
-${tourUrl ? `
-  <a href="${escapeHtml(tourUrl)}" target="_blank" rel="noopener noreferrer" class="tour-button">
-    View Virtual Tour
-  </a>
-` : ``}
-
-<div class="remarks">${escapeHtml(remarks)}</div>
-      </div>
-
-      <div class="card side-card">
-        <h2>Interested in this home?</h2>
-        <p>Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.</p>
-
-        <a class="cta-btn primary" href="/contact">Book a showing</a>
-        <a class="cta-btn secondary" href="/contact">Request more info</a>
-        <a class="cta-btn secondary" href="/map">See more listings</a>
-      </div>
-    </div>
-
-    <div class="details-grid">
-      <div class="card details-card">
-        <h3>Property details</h3>
-        <div class="detail-row">
-          <span class="label">Status</span>
-          ${escapeHtml(String(status))}
-        </div>
-        <div class="detail-row">
-          <span class="label">MLS® Number</span>
-          ${escapeHtml(String(mls))}
-        </div>
-        <div class="detail-row">
-          <span class="label">Bedrooms</span>
-          ${escapeHtml(String(beds))}
-        </div>
-        <div class="detail-row">
-          <span class="label">Bathrooms</span>
-          ${escapeHtml(String(baths))}
-        </div>
-      </div>
-
-      <div class="card details-card">
-        <h3>Location & brokerage</h3>
-        <div class="detail-row">
-          <span class="label">Address</span>
-          ${escapeHtml(address)}
-        </div>
-        <div class="detail-row">
-          <span class="label">City / Province / Postal</span>
-          ${escapeHtml(cityProvincePostal)}
-        </div>
-        <div class="detail-row">
-          <span class="label">Brokerage</span>
-          ${escapeHtml(String(brokerage))}
-        </div>
-        <div class="detail-row">
-          <span class="label">Coordinates</span>
-          ${escapeHtml(String(lat))}, ${escapeHtml(String(lng))}
-        </div>
-      </div>
-    </div>
-  `;
-
-  const mainPhoto = document.getElementById("mainListingPhoto");
-  const thumbButtons = document.querySelectorAll(".gallery-thumb");
-
-  thumbButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const url = btn.getAttribute("data-photo-url");
-      if (!url || !mainPhoto) return;
-
-      mainPhoto.src = url;
-
-      thumbButtons.forEach(x => x.classList.remove("active"));
-      btn.classList.add("active");
-    });
-  });
-}
-
-async function loadListing() {
-  const key = getParam("key");
-
-  if (!key) {
-    document.getElementById("content").innerHTML = `
-      <div class="status error">Missing listing key in URL.</div>
-    `;
-    return;
-  }
-
-  try {
-    const resp = await fetch(`${API_BASE}/api/listings/${encodeURIComponent(key)}`);
-    if (!resp.ok) {
-      throw new Error(`API returned ${resp.status}`);
+    function normalizeUrl(url) {
+      try {
+        return new URL(url);
+      } catch {
+        return null;
+      }
     }
 
-    const listing = await resp.json();
-    renderListing(listing);
-  } catch (err) {
-    console.error(err);
-    document.getElementById("content").innerHTML = `
-      <div class="status error">Could not load this listing.</div>
-    `;
-  }
-}
+    function scoreTourCandidate(url, text = "") {
+      const parsed = normalizeUrl(url);
+      if (!parsed) return { allowed: false, branded: true, score: -999 };
 
-loadListing();
+      const haystack = `${parsed.hostname} ${parsed.pathname} ${parsed.search} ${text}`.toLowerCase();
+
+      const brandedTerms = [
+        "realtor",
+        "mls",
+        "idx",
+        "broker",
+        "realty",
+        "royallepage",
+        "royal lepage",
+        "kwhomes",
+        "point2",
+        "websitebox",
+        "myrealpage",
+        "kunversion",
+        "kvcore",
+        "homesandland",
+        "singlepropertysites",
+        "view.property",
+        "propertyguys",
+        "brand",
+        "branded"
+      ];
+
+      const unbrandedSignals = [
+        "unbranded",
+        "ub",
+        "matterport",
+        "youriguide",
+        "iguide",
+        "tourbuzz",
+        "showthisproperty",
+        "media",
+        "virtualtour",
+        "virtual-tour",
+        "video",
+        "vimeo",
+        "youtube",
+        "youtu.be"
+      ];
+
+      const isBranded = brandedTerms.some(term => haystack.includes(term));
+      const looksUnbranded = unbrandedSignals.some(term => haystack.includes(term));
+
+      if (isBranded && !looksUnbranded) {
+        return { allowed: false, branded: true, score: -100 };
+      }
+
+      let score = 0;
+      if (looksUnbranded) score += 10;
+      if (haystack.includes("unbranded")) score += 20;
+      if (haystack.includes("matterport")) score += 8;
+      if (haystack.includes("youriguide") || haystack.includes("iguide")) score += 8;
+      if (!isBranded) score += 6;
+
+      return { allowed: true, branded: false, score };
+    }
+
+    function getVirtualTourCandidate(listing) {
+      const raw = getRawObject(listing);
+      if (!raw) return null;
+
+      const candidates = [];
+      const directFields = [
+        ["VirtualTourURL", raw.VirtualTourURL],
+        ["VirtualTourUrl", raw.VirtualTourUrl],
+        ["AlternateURL", raw.AlternateURL],
+        ["AlternateUrl", raw.AlternateUrl],
+        ["MultimediaURL", raw.MultimediaURL],
+        ["MultimediaUrl", raw.MultimediaUrl],
+        ["VideoURL", raw.VideoURL],
+        ["VideoUrl", raw.VideoUrl]
+      ];
+
+      directFields.forEach(([label, value]) => {
+        if (value) candidates.push({ url: String(value), text: label });
+      });
+
+      const media = raw.Media || raw.media || [];
+      if (Array.isArray(media)) {
+        media.forEach(item => {
+          const url = item?.MediaURL || item?.mediaUrl;
+          if (!url) return;
+
+          const text = [
+            item?.MediaCategory,
+            item?.mediaCategory,
+            item?.MediaDescription,
+            item?.mediaDescription,
+            item?.LongDescription,
+            item?.longDescription,
+            item?.ShortDescription,
+            item?.shortDescription
+          ].filter(Boolean).join(" ");
+
+          const haystack = text.toLowerCase();
+          if (
+            haystack.includes("virtual") ||
+            haystack.includes("tour") ||
+            haystack.includes("matterport") ||
+            haystack.includes("iguide") ||
+            haystack.includes("video") ||
+            haystack.includes("youtube") ||
+            haystack.includes("vimeo")
+          ) {
+            candidates.push({ url: String(url), text });
+          }
+        });
+      }
+
+      const scored = candidates
+        .map(candidate => ({
+          ...candidate,
+          ...scoreTourCandidate(candidate.url, candidate.text)
+        }))
+        .filter(candidate => candidate.allowed);
+
+      if (!scored.length) return null;
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored[0];
+    }
+
+    function getVirtualTourUrl(listing) {
+      return getVirtualTourCandidate(listing)?.url || null;
+    }
+
+    function buildGoogleMapsLink(lat, lng, address) {
+      if (Number.isFinite(Number(lat)) && Number.isFinite(Number(lng))) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+      }
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
+    }
+
+    function buildMapEmbedUrl(lat, lng, address) {
+      if (Number.isFinite(Number(lat)) && Number.isFinite(Number(lng))) {
+        return `https://maps.google.com/maps?q=${encodeURIComponent(`${lat},${lng}`)}&z=14&output=embed`;
+      }
+      return `https://maps.google.com/maps?q=${encodeURIComponent(address || "")}&z=14&output=embed`;
+    }
+
+    function buildContactUrl(type, listing) {
+      const address = getAddress(listing);
+      const key = listing.listing_key ?? "";
+      const mls = listing.mls_number ?? listing.mlsNumber ?? "";
+      const url = new URL("/contact", window.location.origin);
+
+      url.searchParams.set("topic", type);
+      url.searchParams.set("listing_key", key);
+      if (address) url.searchParams.set("address", address);
+      if (mls) url.searchParams.set("mls", mls);
+
+      return `${url.pathname}${url.search}`;
+    }
+
+    function setMainPhoto(index) {
+      if (!currentPhotos.length) return;
+
+      const safeIndex = ((index % currentPhotos.length) + currentPhotos.length) % currentPhotos.length;
+      currentPhotoIndex = safeIndex;
+
+      const mainPhoto = document.getElementById("mainListingPhoto");
+      const count = document.getElementById("galleryCount");
+      const thumbButtons = document.querySelectorAll(".gallery-thumb");
+
+      if (mainPhoto) {
+        mainPhoto.src = currentPhotos[safeIndex].url;
+        mainPhoto.alt = currentPhotos[safeIndex].alt || `Listing photo ${safeIndex + 1}`;
+      }
+
+      if (count) {
+        count.textContent = `${safeIndex + 1} / ${currentPhotos.length}`;
+      }
+
+      thumbButtons.forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === safeIndex);
+      });
+
+      const activeThumb = thumbButtons[safeIndex];
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    }
+
+    function openTourPanel(url) {
+      activeTourUrl = url;
+      const panel = document.getElementById("tourPanel");
+      const frame = document.getElementById("tourFrame");
+      const fallback = document.getElementById("tourOpenNewTab");
+
+      if (!panel || !frame || !fallback) return;
+
+      frame.src = url;
+      fallback.href = url;
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function closeTourPanel() {
+      const panel = document.getElementById("tourPanel");
+      const frame = document.getElementById("tourFrame");
+      if (!panel || !frame) return;
+
+      frame.src = "about:blank";
+      panel.hidden = true;
+    }
+
+    function calculateMortgage() {
+      const purchasePrice = parseMoney(document.getElementById("calcPrice")?.value);
+      const downPayment = parseMoney(document.getElementById("calcDown")?.value) ?? 0;
+      const annualRate = Number(document.getElementById("calcRate")?.value || 0);
+      const amortYears = Number(document.getElementById("calcAmortization")?.value || 25);
+
+      const paymentEl = document.getElementById("mortgagePayment");
+      const detailEl = document.getElementById("mortgageDetail");
+
+      if (!paymentEl || !detailEl) return;
+
+      if (!purchasePrice || purchasePrice <= 0) {
+        paymentEl.textContent = "—";
+        detailEl.textContent = "Enter a purchase price to see an estimate.";
+        return;
+      }
+
+      const principal = Math.max(purchasePrice - downPayment, 0);
+      const monthlyRate = annualRate / 100 / 12;
+      const numberOfPayments = amortYears * 12;
+
+      let payment = 0;
+      if (principal <= 0) {
+        payment = 0;
+      } else if (monthlyRate === 0) {
+        payment = principal / numberOfPayments;
+      } else {
+        payment =
+          principal *
+          (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+          (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+      }
+
+      paymentEl.textContent = formatMoney(payment);
+      detailEl.textContent = `Based on ${formatMoney(principal)} financed over ${amortYears} years at ${annualRate.toFixed(2)}% interest. Estimate only.`;
+    }
+
+    function attachGalleryEvents() {
+      const prevBtn = document.getElementById("galleryPrev");
+      const nextBtn = document.getElementById("galleryNext");
+      const thumbButtons = document.querySelectorAll(".gallery-thumb");
+
+      prevBtn?.addEventListener("click", () => setMainPhoto(currentPhotoIndex - 1));
+      nextBtn?.addEventListener("click", () => setMainPhoto(currentPhotoIndex + 1));
+
+      thumbButtons.forEach((btn, idx) => {
+        btn.addEventListener("click", () => setMainPhoto(idx));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (!currentPhotos.length) return;
+
+        if (event.key === "ArrowLeft") {
+          setMainPhoto(currentPhotoIndex - 1);
+        } else if (event.key === "ArrowRight") {
+          setMainPhoto(currentPhotoIndex + 1);
+        }
+      }, { once: true });
+    }
+
+    function attachTourEvents() {
+      const openBtn = document.getElementById("openTourBtn");
+      const closeBtn = document.getElementById("closeTourBtn");
+
+      openBtn?.addEventListener("click", () => {
+        const url = openBtn.getAttribute("data-tour-url");
+        if (url) openTourPanel(url);
+      });
+
+      closeBtn?.addEventListener("click", closeTourPanel);
+    }
+
+    function attachMortgageEvents(listing) {
+      const priceInput = document.getElementById("calcPrice");
+      const downInput = document.getElementById("calcDown");
+      const rateInput = document.getElementById("calcRate");
+      const amortization = document.getElementById("calcAmortization");
+      const button = document.getElementById("mortgageConsultBtn");
+
+      [priceInput, downInput, rateInput, amortization].forEach(el => {
+        el?.addEventListener("input", calculateMortgage);
+        el?.addEventListener("change", calculateMortgage);
+      });
+
+      button?.addEventListener("click", () => {
+        window.location.href = buildContactUrl("mortgage_consultant", listing);
+      });
+
+      calculateMortgage();
+    }
+
+    function renderListing(listing) {
+      const price = formatPrice(listing);
+      const statusLabel = getStatusLabel(listing);
+      const photoItems = getPhotoItems(listing);
+      const primaryPhotoUrl = getPrimaryPhotoUrl(listing);
+      const address = getAddress(listing);
+      const cityProvincePostal = getCityProvincePostal(listing);
+      const remarks = getRemarks(listing);
+      const beds = getBeds(listing);
+      const baths = getBaths(listing);
+      const mls = listing.mls_number ?? listing.mlsNumber ?? "—";
+      const brokerage = listing.brokerage_name ?? listing.office_name ?? listing.officeName ?? "—";
+      const lat = Number(listing.lat);
+      const lng = Number(listing.lng);
+      const googleMapsLink = buildGoogleMapsLink(lat, lng, address);
+      const mapEmbedUrl = buildMapEmbedUrl(lat, lng, address);
+      const safeTourUrl = getVirtualTourUrl(listing);
+      const hasCoordinates = Number.isFinite(lat) && Number.isFinite(lng);
+
+      currentPhotos = photoItems.length
+        ? photoItems
+        : (primaryPhotoUrl ? [{ url: primaryPhotoUrl, alt: "Listing photo" }] : []);
+      currentPhotoIndex = 0;
+
+      const calculatorPrice = listing.list_price ?? listing.listPrice ?? listing.price ?? "";
+      const calculatorDown = Number.isFinite(Number(calculatorPrice))
+        ? Math.round(Number(calculatorPrice) * 0.20)
+        : "";
+
+      document.title = `${address} | Change Realty`;
+
+      document.getElementById("content").innerHTML = `
+        <div class="page-grid">
+          <div class="column">
+            <div class="card details-card">
+              <div class="eyebrow">${escapeHtml(statusLabel)}</div>
+              <h1 class="price">${escapeHtml(price)}</h1>
+              <div class="address">${escapeHtml(address)}</div>
+              <p class="subline">${escapeHtml(cityProvincePostal)}</p>
+
+              <div class="badges">
+                <div class="badge">${escapeHtml(String(beds))} Bedrooms</div>
+                <div class="badge">${escapeHtml(String(baths))} Bathrooms</div>
+                <div class="badge">MLS® ${escapeHtml(String(mls))}</div>
+                <div class="badge">${listing.is_lease ? "Lease" : "Sale"}</div>
+              </div>
+
+              <div class="remarks">${escapeHtml(remarks)}</div>
+            </div>
+
+            <div class="card details-card">
+              <h2 class="section-title">Interested in this home?</h2>
+              <p class="subline" style="margin-bottom:16px;">
+                Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.
+              </p>
+
+              <div class="cta-stack">
+                <a class="cta-btn primary" href="${escapeHtml(buildContactUrl("book_showing", listing))}">Book a showing</a>
+                <a class="cta-btn secondary" href="${escapeHtml(buildContactUrl("request_info", listing))}">Request more info</a>
+                <a class="cta-btn secondary" href="/map">See more listings</a>
+              </div>
+            </div>
+
+            <div class="details-grid">
+              <div class="card details-subcard">
+                <h3>Property details</h3>
+
+                <div class="detail-row">
+                  <span class="label">Status</span>
+                  ${escapeHtml(String(statusLabel))}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">MLS® Number</span>
+                  ${escapeHtml(String(mls))}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">Bedrooms</span>
+                  ${escapeHtml(String(beds))}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">Bathrooms</span>
+                  ${escapeHtml(String(baths))}
+                </div>
+              </div>
+
+              <div class="card details-subcard">
+                <h3>Location & brokerage</h3>
+
+                <div class="detail-row">
+                  <span class="label">Address</span>
+                  ${escapeHtml(address)}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">City / Province / Postal</span>
+                  ${escapeHtml(cityProvincePostal)}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">Brokerage</span>
+                  ${escapeHtml(String(brokerage))}
+                </div>
+
+                <div class="detail-row">
+                  <span class="label">Coordinates</span>
+                  ${hasCoordinates ? escapeHtml(`${lat}, ${lng}`) : "Not available"}
+                </div>
+              </div>
+            </div>
+
+            <div class="card details-card">
+              <h2 class="section-title">Mortgage calculator</h2>
+
+              <div class="mortgage-grid">
+                <div class="field">
+                  <label for="calcPrice">Purchase price</label>
+                  <input id="calcPrice" type="text" value="${escapeHtml(calculatorPrice ? formatMoney(calculatorPrice) : "")}" placeholder="$750,000" />
+                </div>
+
+                <div class="field">
+                  <label for="calcDown">Down payment</label>
+                  <input id="calcDown" type="text" value="${escapeHtml(calculatorDown ? formatMoney(calculatorDown) : "")}" placeholder="$150,000" />
+                </div>
+
+                <div class="field">
+                  <label for="calcRate">Interest rate</label>
+                  <input id="calcRate" type="number" step="0.01" value="4.79" />
+                </div>
+
+                <div class="field">
+                  <label for="calcAmortization">Amortization</label>
+                  <select id="calcAmortization">
+                    <option value="25" selected>25 years</option>
+                    <option value="30">30 years</option>
+                    <option value="20">20 years</option>
+                    <option value="15">15 years</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mortgage-result">
+                <div class="small">Estimated monthly payment</div>
+                <div class="mortgage-payment" id="mortgagePayment">—</div>
+                <p class="mortgage-note" id="mortgageDetail">Enter a purchase price to see an estimate.</p>
+              </div>
+
+              <button class="cta-btn primary" id="mortgageConsultBtn" type="button">Request mortgage consultant appointment</button>
+            </div>
+
+            <div class="card details-card">
+              <h2 class="section-title">General location</h2>
+
+              <iframe
+                class="location-map"
+                src="${escapeHtml(mapEmbedUrl)}"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="General location map"
+              ></iframe>
+
+              <div class="map-actions">
+                <a class="cta-btn secondary" href="${escapeHtml(googleMapsLink)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="card media-card">
+              <div class="gallery-wrap">
+                ${currentPhotos.length ? `
+                  <div class="gallery-main">
+                    <button type="button" class="gallery-nav prev" id="galleryPrev" aria-label="Previous photo">‹</button>
+                    <img id="mainListingPhoto" src="${escapeHtml(currentPhotos[0].url)}" alt="${escapeHtml(currentPhotos[0].alt || "Listing photo")}" loading="eager" />
+                    <button type="button" class="gallery-nav next" id="galleryNext" aria-label="Next photo">›</button>
+                    <div class="gallery-count" id="galleryCount">1 / ${currentPhotos.length}</div>
+                  </div>
+
+                  <div class="gallery-thumbs" id="galleryThumbs">
+                    ${currentPhotos.map((item, index) => `
+                      <button
+                        type="button"
+                        class="gallery-thumb ${index === 0 ? "active" : ""}"
+                        aria-label="View photo ${index + 1}"
+                      >
+                        <img src="${escapeHtml(item.url)}" alt="${escapeHtml(item.alt || `Listing thumbnail ${index + 1}`)}" />
+                      </button>
+                    `).join("")}
+                  </div>
+                ` : `
+                  <div class="gallery-main">
+                    <div class="gallery-empty">No photo available</div>
+                  </div>
+                `}
+              </div>
+
+              ${safeTourUrl ? `
+                <div class="tour-actions">
+                  <button type="button" class="tour-btn" id="openTourBtn" data-tour-url="${escapeHtml(safeTourUrl)}">Open virtual tour</button>
+                </div>
+                <p class="tour-note">Only a likely unbranded virtual tour is shown. If embedding is blocked by the tour provider, use the fallback link inside the panel.</p>
+              ` : `
+                <p class="tour-note">No safe unbranded virtual tour was found for this listing.</p>
+              `}
+
+              <div class="tour-panel" id="tourPanel" hidden>
+                <div class="tour-panel-head">
+                  <div class="tour-panel-title">Virtual tour</div>
+                  <button type="button" class="tour-close" id="closeTourBtn">Close</button>
+                </div>
+
+                <div class="tour-frame-wrap">
+                  <iframe id="tourFrame" class="tour-frame" src="about:blank" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </div>
+
+                <div class="tour-panel-foot">
+                  <p>If the tour doesn’t load here, the provider is likely blocking embedded viewing.</p>
+                  <a class="tour-btn secondary" id="tourOpenNewTab" href="#" target="_blank" rel="noopener noreferrer">Open in new tab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      attachGalleryEvents();
+      attachTourEvents();
+      attachMortgageEvents(listing);
+      if (currentPhotos.length) setMainPhoto(0);
+    }
+
+    async function loadListing() {
+      const key = getParam("key");
+
+      if (!key) {
+        document.getElementById("content").innerHTML = `
+          <div class="status error">Missing listing key in URL.</div>
+        `;
+        return;
+      }
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/listings/${encodeURIComponent(key)}`);
+        if (!resp.ok) {
+          throw new Error(`API returned ${resp.status}`);
+        }
+
+        const listing = await resp.json();
+        renderListing(listing);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("content").innerHTML = `
+          <div class="status error">Could not load this listing.</div>
+        `;
+      }
+    }
+
+    loadListing();
   </script>
 </body>
 </html>
