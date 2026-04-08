@@ -113,19 +113,95 @@ html, body{
 .listing{
   background:#fff;
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:14px;
   padding:10px;
   cursor:pointer;
-  transition:.15s;
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  display:grid;
+  grid-template-columns:96px 1fr;
+  gap:10px;
+  align-items:start;
+  min-width:0;
 }
 
 .listing:hover{
-  transform:translateY(-2px);
+  transform:translateY(-1px);
   box-shadow:var(--shadow);
+  border-color:#d1d5db;
 }
 
 .listing.active{
-  border-color:#000;
+  border-color:#111827;
+  box-shadow:var(--shadow);
+}
+
+.listing-photo-wrap{
+  width:96px;
+  height:76px;
+  border-radius:10px;
+  overflow:hidden;
+  background:#e5e7eb;
+  flex:0 0 auto;
+}
+
+.listing-photo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+}
+
+.listing-photo-empty{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  padding:6px;
+}
+
+.listing-main{
+  min-width:0;
+}
+
+.price{
+  font-size:18px;
+  font-weight:700;
+  margin:0 0 6px;
+}
+
+.address{
+  font-size:14px;
+  font-weight:600;
+  margin:0 0 6px;
+  line-height:1.35;
+}
+
+.meta,
+.remarks{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.meta{
+  margin-bottom:6px;
+}
+
+.remarks{
+  margin-bottom:8px;
+}
+
+.details-link{
+  display:inline-block;
+  font-size:12px;
+  font-weight:700;
+  color:#111827;
+  text-decoration:none;
 }
 
 .price{
@@ -143,6 +219,21 @@ html, body{
 .meta{
   font-size:12px;
   color:var(--muted);
+}
+
+.marker-pin{
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  background:#111827;
+  border:2px solid #ffffff;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+  transition:transform .12s ease, background .12s ease;
+}
+
+.marker-pin.active{
+  background:#dc2626;
+  transform:scale(1.2);
 }
 
 /* MAP */
@@ -169,6 +260,15 @@ html, body{
   .list{
     grid-template-columns:1fr;
   }
+
+.listing{
+  grid-template-columns:84px 1fr;
+}
+
+.listing-photo-wrap{
+  width:84px;
+  height:68px;
+}
 }
 </style>
 </head>
@@ -325,6 +425,10 @@ html, body{
         .replaceAll("'", "&#39;");
     }
 
+function getPhotoUrl(listing) {
+  return listing.photo || listing.photo_url || listing.thumbnail || null;
+}
+
     function getVisibleBoundsParams() {
       const bounds = map.getBounds();
       if (!bounds) return null;
@@ -362,62 +466,113 @@ html, body{
     }
 
     function renderList(listings) {
-      const container = document.getElementById("resultsList");
-      const summary = document.getElementById("resultsSummary");
-      summary.textContent = `${listings.length} listing${listings.length === 1 ? "" : "s"} in view`;
+  const container = document.getElementById("resultsList");
+  const summary = document.getElementById("resultsSummary");
+  summary.textContent = `${listings.length} listing${listings.length === 1 ? "" : "s"} in view`;
 
-      if (!listings.length) {
-        container.innerHTML = '<div class="empty">No listings match the visible map area and filters.</div>';
-        return;
-      }
+  if (!listings.length) {
+    container.innerHTML = '<div class="empty">No listings match the visible map area and filters.</div>';
+    return;
+  }
 
-      container.innerHTML = listings.map(listing => {
-        const id = getListingId(listing);
-        const price = formatPrice(listing);
-        const address = getAddress(listing);
-        const cityProvince = getCityProvince(listing);
-        const bedsBaths = getBedsBaths(listing);
-        const remarks = getRemarks(listing);
-        const shortRemarks = remarks.length > 140 ? remarks.slice(0, 140).trim() + "…" : remarks;
-        const isLease = !!listing.is_lease;
+  container.innerHTML = listings.map(listing => {
+    const id = getListingId(listing);
+    const price = formatPrice(listing);
+    const address = getAddress(listing);
+    const cityProvince = getCityProvince(listing);
+    const bedsBaths = getBedsBaths(listing);
+    const remarks = getRemarks(listing);
+    const shortRemarks = remarks.length > 110 ? remarks.slice(0, 110).trim() + "…" : remarks;
+    const isLease = !!listing.is_lease;
+    const detailsUrl = buildDetailsUrl(listing);
+    const photoUrl = getPhotoUrl(listing);
 
-        return `
-          <article class="listing" data-id="${escapeHtml(id)}">
-            <div class="pill">${isLease ? "For Lease" : "For Sale"}</div>
-            <div class="price">${escapeHtml(price)}</div>
-            <div class="address">${escapeHtml(address)}</div>
-            <div class="meta">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
-            <div class="remarks">${escapeHtml(shortRemarks || "Click pin for more details.")}</div>
-          </article>
-        `;
-      }).join("");
+    return `
+      <article class="listing" data-id="${escapeHtml(id)}" data-url="${escapeHtml(detailsUrl)}">
+        <div class="listing-photo-wrap">
+          ${photoUrl ? `
+            <img
+              class="listing-photo"
+              src="${escapeHtml(photoUrl)}"
+              alt="Photo for ${escapeHtml(address)}"
+              loading="lazy"
+            />
+          ` : `
+            <div class="listing-photo-empty">No photo</div>
+          `}
+        </div>
 
-      container.querySelectorAll(".listing").forEach(card => {
-        card.addEventListener("click", () => {
-          const id = card.dataset.id;
-          const marker = markerById.get(id);
-          const listing = lastListings.find(x => getListingId(x) === id);
-          if (!listing) return;
-          highlightCard(id);
-          if (marker) {
-            map.panTo(marker.position);
-            openInfoWindow(listing, marker);
-          }
-        });
-      });
+        <div class="listing-main">
+          <div class="pill">${isLease ? "For Lease" : "For Sale"}</div>
+          <div class="price">${escapeHtml(price)}</div>
+          <div class="address">${escapeHtml(address)}</div>
+          <div class="meta">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
+          <div class="remarks">${escapeHtml(shortRemarks || "Click for more details.")}</div>
+          <a class="details-link" href="${escapeHtml(detailsUrl)}">View details</a>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  container.querySelectorAll(".listing").forEach(card => {
+    const id = card.dataset.id;
+    const listing = lastListings.find(x => getListingId(x) === id);
+    const marker = markerById.get(id);
+    if (!listing) return;
+
+    card.addEventListener("mouseenter", () => {
+      highlightCard(id);
+      setMarkerActive(id, true);
+    });
+
+    card.addEventListener("mouseleave", () => {
+      setMarkerActive(id, false);
+      clearActiveCard();
+    });
+
+    card.addEventListener("click", (event) => {
+      const clickedLink = event.target.closest("a");
+      if (clickedLink) return;
+      window.location.href = card.dataset.url;
+    });
+
+    if (marker) {
+      // nothing needed here now
     }
+  });
+}
 
     function highlightCard(id) {
-      document.querySelectorAll(".listing").forEach(el => {
-        el.classList.toggle("active", el.dataset.id === id);
-      });
-    }
+  document.querySelectorAll(".listing").forEach(el => {
+    el.classList.toggle("active", el.dataset.id === id);
+  });
+}
+
+function clearActiveCard() {
+  document.querySelectorAll(".listing").forEach(el => {
+    el.classList.remove("active");
+  });
+}
 
     function clearMarkers() {
       markers.forEach(marker => { marker.map = null; });
       markers = [];
       markerById.clear();
     }
+
+function setMarkerActive(id, active) {
+  const marker = markerById.get(id);
+  if (!marker || !marker.content) return;
+  marker.content.classList.toggle("active", active);
+}
+
+function clearAllMarkerActiveStates() {
+  markerById.forEach(marker => {
+    if (marker && marker.content) {
+      marker.content.classList.remove("active");
+    }
+  });
+}
 
     function openInfoWindow(listing, marker) {
       const price = formatPrice(listing);
@@ -473,36 +628,51 @@ console.log("DETAILS URL", detailsUrl, listing);
     }
 
     function renderMarkers(listings) {
-      clearMarkers();
+  clearMarkers();
 
-      listings.forEach(listing => {
-        const pos = getLatLng(listing);
-        if (!pos) return;
+  listings.forEach(listing => {
+    const pos = getLatLng(listing);
+    if (!pos) return;
 
-        const id = getListingId(listing);
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: pos,
-          title: getAddress(listing),
-          gmpClickable: true
-        });
+    const id = getListingId(listing);
 
-        marker.addEventListener("gmp-click", () => {
-          highlightCard(id);
-          openInfoWindow(listing, marker);
-          const card = document.querySelector(`.listing[data-id="${CSS.escape(id)}"]`);
-          if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        });
+    const pin = document.createElement("div");
+    pin.className = "marker-pin";
 
-        markers.push(marker);
-        markerById.set(id, marker);
-      });
-    }
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position: pos,
+      title: getAddress(listing),
+      content: pin,
+      gmpClickable: true
+    });
 
-    function debounceLoad() {
-      clearTimeout(fetchTimer);
-      fetchTimer = setTimeout(loadListingsForMap, 350);
-    }
+    marker.content = pin;
+
+    marker.addEventListener("gmp-click", () => {
+      clearAllMarkerActiveStates();
+setMarkerActive(getListingId(listing), true);
+highlightCard(getListingId(listing));
+      openInfoWindow(listing, marker);
+      const card = document.querySelector(`.listing[data-id="${CSS.escape(id)}"]`);
+      if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    pin.addEventListener("mouseenter", () => {
+      clearAllMarkerActiveStates();
+      setMarkerActive(id, true);
+      highlightCard(id);
+    });
+
+    pin.addEventListener("mouseleave", () => {
+      setMarkerActive(id, false);
+      clearActiveCard();
+    });
+
+    markers.push(marker);
+    markerById.set(id, marker);
+  });
+}
 
 function centerOnUserLocation() {
   if (!navigator.geolocation) return;
@@ -553,7 +723,7 @@ centerOnUserLocation();
 map.addListener("idle", debounceLoad);
 
       document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
-      document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+document.getElementById("resetFiltersBtn").addEventListener("click", () => {
         document.getElementById("mode").value = "sale";
         document.getElementById("minPrice").value = "";
         document.getElementById("maxPrice").value = "";
