@@ -705,6 +705,11 @@ function centerOnUserLocation() {
   );
 }
 
+function debounceLoad() {
+  clearTimeout(fetchTimer);
+  fetchTimer = setTimeout(loadListingsForMap, 350);
+}
+
     async function initMap() {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps");
       await google.maps.importLibrary("marker");
