@@ -434,7 +434,52 @@ html, body{
         .replaceAll("'", "&#39;");
     }
 
+function getRawObject(listing) {
+  if (!listing || !listing.raw) return null;
+
+  if (typeof listing.raw === "string") {
+    try {
+      return JSON.parse(listing.raw);
+    } catch {
+      return null;
+    }
+  }
+
+  return listing.raw;
+}
+
+function getPhotoItems(listing) {
+  const raw = getRawObject(listing);
+  const media = raw?.Media || raw?.media;
+
+  if (!Array.isArray(media)) return [];
+
+  return media
+    .filter(item => item && (item.MediaURL || item.mediaUrl))
+    .filter(item => {
+      const category = String(item.MediaCategory || item.mediaCategory || "").toLowerCase();
+      return !category || category.includes("photo");
+    })
+    .sort((a, b) => {
+      const aPreferred = a.PreferredPhotoYN ? 1 : 0;
+      const bPreferred = b.PreferredPhotoYN ? 1 : 0;
+
+      if (aPreferred !== bPreferred) {
+        return bPreferred - aPreferred;
+      }
+
+      const aOrder = Number(a.Order ?? 999999);
+      const bOrder = Number(b.Order ?? 999999);
+      return aOrder - bOrder;
+    });
+}
+
 function getPhotoUrl(listing) {
+  const photos = getPhotoItems(listing);
+  if (photos.length) {
+    return photos[0].MediaURL || photos[0].mediaUrl || null;
+  }
+
   return listing.photo || listing.photo_url || listing.thumbnail || null;
 }
 
@@ -664,16 +709,26 @@ function clearAllMarkerActiveStates() {
 console.log("DETAILS URL", detailsUrl, listing);
       const remarks = getRemarks(listing);
       const shortRemarks = remarks.length > 180 ? remarks.slice(0, 180).trim() + "…" : remarks;
+const photoUrl = getPhotoUrl(listing);
 
       const html = `
-        <div style="max-width:280px;padding:4px 2px;">
-          <div style="font-size:18px;font-weight:700;margin-bottom:6px;">${escapeHtml(price)}</div>
-          <div style="font-size:14px;font-weight:600;line-height:1.35;margin-bottom:6px;">${escapeHtml(address)}</div>
-          <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
-          <div style="font-size:13px;line-height:1.45;margin-bottom:10px;">${escapeHtml(shortRemarks)}</div>
-          <a href="${escapeHtml(detailsUrl)}" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;">View full details</a>
-        </div>
-      `;
+  <div style="max-width:280px;padding:4px 2px;">
+    ${photoUrl ? `
+      <div style="width:100%;height:150px;border-radius:10px;overflow:hidden;background:#e5e7eb;margin-bottom:10px;">
+        <img
+          src="${escapeHtml(photoUrl)}"
+          alt="Photo for ${escapeHtml(address)}"
+          style="width:100%;height:100%;object-fit:cover;display:block;"
+        />
+      </div>
+    ` : ``}
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">${escapeHtml(price)}</div>
+    <div style="font-size:14px;font-weight:600;line-height:1.35;margin-bottom:6px;">${escapeHtml(address)}</div>
+    <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">${escapeHtml([cityProvince, bedsBaths].filter(Boolean).join(" • "))}</div>
+    <div style="font-size:13px;line-height:1.45;margin-bottom:10px;">${escapeHtml(shortRemarks)}</div>
+    <a href="${escapeHtml(detailsUrl)}" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;">View full details</a>
+  </div>
+`;
 
       infoWindow.setContent(html);
       infoWindow.open({ anchor: marker, map });
