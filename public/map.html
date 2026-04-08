@@ -222,18 +222,27 @@ html, body{
 }
 
 .marker-pin{
-  width:18px;
-  height:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  height:32px;
+  padding:0 10px;
   border-radius:999px;
   background:#111827;
+  color:#fff;
   border:2px solid #ffffff;
   box-shadow:0 2px 10px rgba(0,0,0,.25);
   transition:transform .12s ease, background .12s ease;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  white-space:nowrap;
 }
 
 .marker-pin.active{
   background:#dc2626;
-  transform:scale(1.2);
+  transform:scale(1.08);
 }
 
 /* MAP */
@@ -430,19 +439,57 @@ function getPhotoUrl(listing) {
 }
 
     function getVisibleBoundsParams() {
-      const bounds = map.getBounds();
-      if (!bounds) return null;
-      const ne = bounds.getNorthEast();
-      const sw = bounds.getSouthWest();
+  const bounds = map.getBounds();
+  if (!bounds) return null;
 
-      return new URLSearchParams({
-        west: sw.lng().toString(),
-        south: sw.lat().toString(),
-        east: ne.lng().toString(),
-        north: ne.lat().toString(),
-        mode: document.getElementById("mode").value
-      });
-    }
+  const ne = bounds.getNorthEast();
+  const sw = bounds.getSouthWest();
+
+  const params = new URLSearchParams({
+    west: sw.lng().toString(),
+    south: sw.lat().toString(),
+    east: ne.lng().toString(),
+    north: ne.lat().toString(),
+    mode: document.getElementById("mode").value
+  });
+
+  const minPrice = document.getElementById("minPrice").value.trim();
+  const maxPrice = document.getElementById("maxPrice").value.trim();
+  const city = document.getElementById("cityFilter").value.trim();
+
+  if (minPrice) params.set("minPrice", minPrice);
+  if (maxPrice) params.set("maxPrice", maxPrice);
+  if (city) params.set("city", city);
+
+  return params;
+}
+
+function formatCompactPrice(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return null;
+
+  if (n >= 1000000) {
+    const m = n / 1000000;
+    return `$${Number.isInteger(m) ? m.toFixed(0) : m.toFixed(1)}M`;
+  }
+
+  if (n >= 1000) {
+    return `$${Math.round(n / 1000)}K`;
+  }
+
+  return `$${Math.round(n)}`;
+}
+
+function getMarkerLabel(listing) {
+  if (listing.is_lease) {
+    const lease = listing.lease_amount ?? listing.leaseAmount ?? null;
+    const formatted = formatCompactPrice(lease);
+    return formatted ? `${formatted}/mo` : "Lease";
+  }
+
+  const sale = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
+  return formatCompactPrice(sale) || "Sale";
+}
 
     function applyClientFilters(listings) {
       const minPrice = Number(document.getElementById("minPrice").value || 0);
@@ -464,6 +511,41 @@ function getPhotoUrl(listing) {
     function setStatus(text) {
       document.getElementById("statusText").textContent = text;
     }
+
+function updatePageUrlFromFilters() {
+  const params = new URLSearchParams();
+
+  const mode = document.getElementById("mode").value;
+  const minPrice = document.getElementById("minPrice").value.trim();
+  const maxPrice = document.getElementById("maxPrice").value.trim();
+  const city = document.getElementById("cityFilter").value.trim();
+
+  if (mode && mode !== "sale") params.set("mode", mode);
+  if (minPrice) params.set("minPrice", minPrice);
+  if (maxPrice) params.set("maxPrice", maxPrice);
+  if (city) params.set("city", city);
+
+  const query = params.toString();
+  const newUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+  window.history.replaceState({}, "", newUrl);
+}
+
+function loadFiltersFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+
+  const mode = params.get("mode");
+  const minPrice = params.get("minPrice");
+  const maxPrice = params.get("maxPrice");
+  const city = params.get("city");
+
+  if (mode && ["sale", "lease", "all"].includes(mode)) {
+    document.getElementById("mode").value = mode;
+  }
+
+  if (minPrice) document.getElementById("minPrice").value = minPrice;
+  if (maxPrice) document.getElementById("maxPrice").value = maxPrice;
+  if (city) document.getElementById("cityFilter").value = city;
+}
 
     function renderList(listings) {
   const container = document.getElementById("resultsList");
@@ -605,6 +687,8 @@ console.log("DETAILS URL", detailsUrl, listing);
       const params = getVisibleBoundsParams();
       if (!params) return;
 
+updatePageUrlFromFilters();
+
       try {
         const url = `${API_BASE}/api/listings?${params.toString()}`;
         const resp = await fetch(url);
@@ -637,7 +721,8 @@ console.log("DETAILS URL", detailsUrl, listing);
     const id = getListingId(listing);
 
     const pin = document.createElement("div");
-    pin.className = "marker-pin";
+pin.className = "marker-pin";
+pin.textContent = getMarkerLabel(listing);
 
     const marker = new google.maps.marker.AdvancedMarkerElement({
       map,
@@ -714,6 +799,8 @@ function debounceLoad() {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps");
       await google.maps.importLibrary("marker");
 
+loadFiltersFromUrl();
+
       map = new Map(document.getElementById("map"), {
         center: DEFAULT_CENTER,
         zoom: DEFAULT_ZOOM,
@@ -729,12 +816,13 @@ map.addListener("idle", debounceLoad);
 
       document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
 document.getElementById("resetFiltersBtn").addEventListener("click", () => {
-        document.getElementById("mode").value = "sale";
-        document.getElementById("minPrice").value = "";
-        document.getElementById("maxPrice").value = "";
-        document.getElementById("cityFilter").value = "";
-        loadListingsForMap();
-      });
+  document.getElementById("mode").value = "sale";
+  document.getElementById("minPrice").value = "";
+  document.getElementById("maxPrice").value = "";
+  document.getElementById("cityFilter").value = "";
+  updatePageUrlFromFilters();
+  loadListingsForMap();
+});
     }
 
     window.initMap = initMap;
