@@ -1,348 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Change Realty | Listings Map</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Change Realty | Listings Map</title>
+
 <style>
-  :root{
-    --bg:#f6f7f9;
-    --card:#ffffff;
-    --text:#1f2937;
-    --muted:#6b7280;
-    --border:#e5e7eb;
-    --accent:#111827;
-    --shadow:0 10px 30px rgba(0,0,0,.10);
-  }
+:root{
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --accent:#111827;
+  --shadow:0 10px 30px rgba(0,0,0,.10);
+}
 
-  *{
-    box-sizing:border-box;
-  }
+*{ box-sizing:border-box; }
 
-  html,
-  body{
-    height:100%;
-    margin:0;
-    padding:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    overflow:hidden;
-  }
+html, body{
+  margin:0;
+  height:100%;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-  body{
-    min-height:100vh;
-  }
+.page{
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
 
-  .page{
-    display:grid;
-    grid-template-columns:420px 1fr;
-    width:100%;
-    height:100vh;
-    min-height:100vh;
-    overflow:hidden;
-  }
+/* TOP FILTER BAR */
+.topbar{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+}
 
-  .sidebar{
-    background:var(--card);
-    border-right:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    min-width:320px;
-    height:100vh;
-    overflow:hidden;
-  }
+.topbar-inner{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:10px;
+  align-items:end;
+}
 
-  .sidebar-header{
-    padding:18px 18px 14px;
-    border-bottom:1px solid var(--border);
-    background:var(--card);
-    flex:0 0 auto;
-  }
+.topbar label{
+  font-size:12px;
+  color:var(--muted);
+  display:block;
+  margin-bottom:6px;
+}
 
-  .brand{
-    font-size:20px;
-    font-weight:700;
-    margin:0 0 10px;
-  }
+.topbar input,
+.topbar select,
+.btn{
+  width:100%;
+  height:42px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  padding:0 10px;
+}
 
-  .sub{
-    font-size:14px;
-    color:var(--muted);
-    margin:0 0 14px;
-    line-height:1.45;
-  }
+.btn{
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
 
-  .filters{
-    display:grid;
+.btn.secondary{
+  background:#fff;
+  color:#000;
+  border:1px solid var(--border);
+}
+
+/* MAIN SPLIT */
+.main{
+  display:grid;
+  grid-template-columns: 1fr 2fr;
+  height:100%;
+}
+
+/* LEFT LIST PANEL */
+.sidebar{
+  background:#fff;
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.results-top{
+  padding:10px 14px;
+  font-size:13px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+}
+
+/* GRID LIST */
+.list{
+  overflow:auto;
+  padding:10px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.listing{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.listing:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+
+.listing.active{
+  border-color:#000;
+}
+
+.price{
+  font-weight:700;
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+.address{
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.meta{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* MAP */
+.map-wrap{
+  position:relative;
+}
+
+#map{
+  width:100%;
+  height:100%;
+}
+
+/* MOBILE */
+@media (max-width:900px){
+  .topbar-inner{
     grid-template-columns:1fr 1fr;
-    gap:10px;
   }
 
-  .filters label{
-    display:block;
-    font-size:12px;
-    color:var(--muted);
-    margin-bottom:6px;
-  }
-
-  .filters select,
-  .filters input,
-  .btn{
-    width:100%;
-    height:42px;
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:0 12px;
-    font-size:14px;
-    background:#fff;
-  }
-
-  .btn{
-    cursor:pointer;
-    background:var(--accent);
-    color:#fff;
-    border:none;
-    font-weight:600;
-    box-shadow:var(--shadow);
-  }
-
-  .btn.secondary{
-    background:#fff;
-    color:var(--text);
-    border:1px solid var(--border);
-    box-shadow:none;
-  }
-
-  .button-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-  }
-
-  .results-top{
-    padding:12px 18px;
-    border-bottom:1px solid var(--border);
-    font-size:14px;
-    color:var(--muted);
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    flex:0 0 auto;
+  .main{
+    grid-template-columns:1fr;
+    grid-template-rows:45% 55%;
   }
 
   .list{
-    overflow:auto;
-    padding:12px;
-    flex:1 1 auto;
-    min-height:0;
+    grid-template-columns:1fr;
   }
-
-  .listing{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:14px;
-    margin-bottom:12px;
-    cursor:pointer;
-    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-  }
-
-  .listing:hover{
-    transform:translateY(-1px);
-    box-shadow:var(--shadow);
-    border-color:#d1d5db;
-  }
-
-  .listing.active{
-    border-color:#111827;
-    box-shadow:var(--shadow);
-  }
-
-  .price{
-    font-size:22px;
-    font-weight:700;
-    margin:0 0 8px;
-  }
-
-  .address{
-    font-size:15px;
-    font-weight:600;
-    margin:0 0 6px;
-    line-height:1.35;
-  }
-
-  .meta,
-  .remarks{
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.45;
-  }
-
-  .meta{
-    margin-bottom:8px;
-  }
-
-  .empty{
-    padding:20px;
-    color:var(--muted);
-    font-size:14px;
-  }
-
-  .map-wrap{
-    position:relative;
-    width:100%;
-    height:100vh;
-    min-height:100vh;
-    overflow:hidden;
-  }
-
-  #map{
-    width:100%;
-    height:100vh;
-    min-height:100vh;
-  }
-
-  .floating-cta{
-    position:absolute;
-    right:18px;
-    bottom:18px;
-    z-index:3;
-    background:#fff;
-    border-radius:16px;
-    box-shadow:var(--shadow);
-    padding:14px 16px;
-    width:min(340px, calc(100% - 36px));
-    border:1px solid var(--border);
-  }
-
-  .floating-cta h3{
-    margin:0 0 6px;
-    font-size:16px;
-  }
-
-  .floating-cta p{
-    margin:0 0 10px;
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.45;
-  }
-
-  .floating-cta a{
-    display:inline-block;
-    padding:10px 14px;
-    border-radius:10px;
-    background:var(--accent);
-    color:#fff;
-    text-decoration:none;
-    font-size:14px;
-    font-weight:600;
-  }
-
-  .pill{
-    display:inline-block;
-    font-size:11px;
-    font-weight:700;
-    padding:5px 8px;
-    border-radius:999px;
-    background:#f3f4f6;
-    color:#374151;
-    margin-bottom:8px;
-  }
-
-  @media (max-width:960px){
-    html,
-    body{
-      overflow:auto;
-    }
-
-    .page{
-      grid-template-columns:1fr;
-      grid-template-rows:45vh 55vh;
-      height:100vh;
-      min-height:100vh;
-    }
-
-    .map-wrap{
-      order:1;
-      height:45vh;
-      min-height:45vh;
-    }
-
-    #map{
-      height:45vh;
-      min-height:45vh;
-    }
-
-    .sidebar{
-      order:2;
-      border-right:none;
-      border-top:1px solid var(--border);
-      height:55vh;
-      min-height:55vh;
-    }
-  }
+}
 </style>
 </head>
+
 <body>
-  <div class="page">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1 class="brand">Change Realty Listings Map</h1>
-        <p class="sub">Live listing map powered by your CREA feed. Move the map to load listings in the visible area.</p>
 
-        <div class="filters">
-          <div>
-            <label for="mode">Mode</label>
-            <select id="mode">
-              <option value="sale">For Sale</option>
-              <option value="lease">For Lease</option>
-              <option value="all">All Listings</option>
-            </select>
-          </div>
-          <div>
-            <label for="minPrice">Min Price</label>
-            <input id="minPrice" type="number" inputmode="numeric" placeholder="Any" />
-          </div>
-          <div>
-            <label for="maxPrice">Max Price</label>
-            <input id="maxPrice" type="number" inputmode="numeric" placeholder="Any" />
-          </div>
-          <div>
-            <label for="cityFilter">City contains</label>
-            <input id="cityFilter" type="text" placeholder="Waterloo" />
-          </div>
-        </div>
+<div class="page">
 
-        <div class="button-row">
-          <button class="btn" id="applyFiltersBtn">Refresh map</button>
-          <button class="btn secondary" id="resetFiltersBtn">Reset</button>
-        </div>
+  <!-- TOP FILTER BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div>
+        <label>Mode</label>
+        <select id="mode">
+          <option value="sale">For Sale</option>
+          <option value="lease">For Lease</option>
+          <option value="all">All</option>
+        </select>
       </div>
 
-      <div class="results-top">
-        <div id="resultsSummary">Loading map…</div>
-        <div id="statusText">Waiting</div>
+      <div>
+        <label>Min Price</label>
+        <input id="minPrice" type="number"/>
       </div>
 
-      <div class="list" id="resultsList">
-        <div class="empty">Loading listings…</div>
+      <div>
+        <label>Max Price</label>
+        <input id="maxPrice" type="number"/>
       </div>
-    </aside>
 
-    <section class="map-wrap">
-      <div id="map"></div>
-
-      <div class="floating-cta">
-        <h3>Want the full details?</h3>
-        <p>Next step: turn this into a lead page with “Book a showing” and “Get new listings like this” forms.</p>
-        <a href="/contact">Book a showing</a>
+      <div>
+        <label>City</label>
+        <input id="cityFilter"/>
       </div>
-    </section>
+
+      <div>
+        <button class="btn" id="applyFiltersBtn">Search</button>
+      </div>
+
+      <div>
+        <button class="btn secondary" id="resetFiltersBtn">Reset</button>
+      </div>
+
+    </div>
   </div>
 
-  <script src="/config.js"></script>
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT -->
+    <aside class="sidebar">
+      <div class="results-top">
+        <div id="resultsSummary">Loading...</div>
+        <div id="statusText">...</div>
+      </div>
+
+      <div class="list" id="resultsList"></div>
+    </aside>
+
+    <!-- RIGHT MAP -->
+    <div class="map-wrap">
+      <div id="map"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="/config.js"></script>
 
   <script>
     const API_BASE = window.APP_CONFIG.API_BASE;
@@ -497,7 +393,7 @@
       }).join("");
 
       container.querySelectorAll(".listing").forEach(card => {
-        card.addEventListener("gmp-click", () => {
+        card.addEventListener("click", () => {
           const id = card.dataset.id;
           const marker = markerById.get(id);
           const listing = lastListings.find(x => getListingId(x) === id);
@@ -656,8 +552,8 @@ function centerOnUserLocation() {
 centerOnUserLocation();      
 map.addListener("idle", debounceLoad);
 
-      document.getElementById("applyFiltersBtn").addEventListener("gmp-click", loadListingsForMap);
-      document.getElementById("resetFiltersBtn").addEventListener("gmp-click", () => {
+      document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
+      document.getElementById("resetFiltersBtn").addEventListener("click", () => {
         document.getElementById("mode").value = "sale";
         document.getElementById("minPrice").value = "";
         document.getElementById("maxPrice").value = "";
