@@ -699,8 +699,15 @@
 
       /* Mobile becomes a property-first single-column layout. */
       .page-grid{
-        display:flex;
-        flex-direction:column;
+        display:grid;
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "media"
+          "summary"
+          "details"
+          "location"
+          "contact"
+          "mortgage";
         gap:14px;
       }
 
@@ -708,14 +715,13 @@
         display:contents;
       }
 
-      /* Mobile order: photos/tour, summary/description,
-         listing details, map, interested/contact, mortgage. */
-      .listing-media{ order:1; }
-      .listing-summary{ order:2; }
-      .listing-details{ order:3; }
-      .listing-location{ order:4; }
-      .listing-contact{ order:5; }
-      .listing-mortgage{ order:6; }
+      /* Explicit mobile placement across both desktop columns. */
+      .listing-media{ grid-area:media; }
+      .listing-summary{ grid-area:summary; }
+      .listing-details{ grid-area:details; }
+      .listing-location{ grid-area:location; }
+      .listing-contact{ grid-area:contact; }
+      .listing-mortgage{ grid-area:mortgage; }
 
       .card{
         border-radius:0;
