@@ -697,31 +697,14 @@
         display:contents;
       }
 
-      /* 1 photo/tour, 2 price/address/description, 3 details,
-         4 mortgage, 5 contact, 6 map */
-      .page-grid > .column:nth-child(2) > .media-card{
-        order:1;
-      }
-
-      .page-grid > .column:nth-child(1) > .details-card:nth-child(1){
-        order:2;
-      }
-
-      .page-grid > .column:nth-child(1) > .details-grid{
-        order:3;
-      }
-
-      .page-grid > .column:nth-child(1) > .details-card:nth-of-type(3){
-        order:4;
-      }
-
-      .page-grid > .column:nth-child(1) > .details-card:nth-child(2){
-        order:5;
-      }
-
-      .page-grid > .column:nth-child(1) > .details-card:nth-of-type(4){
-        order:6;
-      }
+      /* Mobile order: photos/tour, map, summary, details,
+         mortgage, then contact. Explicit classes avoid ordering mistakes. */
+      .listing-media{ order:1; }
+      .listing-location{ order:2; }
+      .listing-summary{ order:3; }
+      .listing-details{ order:4; }
+      .listing-mortgage{ order:5; }
+      .listing-contact{ order:6; }
 
       .card{
         border-radius:0;
@@ -1497,7 +1480,7 @@
       document.getElementById("content").innerHTML = `
         <div class="page-grid">
           <div class="column">
-            <div class="card details-card">
+            <div class="card details-card listing-summary">
               <div class="eyebrow">${escapeHtml(statusLabel)}</div>
               <h1 class="price">${escapeHtml(price)}</h1>
               <div class="address">${escapeHtml(address)}</div>
@@ -1513,7 +1496,7 @@
               <div class="remarks">${escapeHtml(remarks)}</div>
             </div>
 
-            <div class="card details-card">
+            <div class="card details-card listing-contact">
               <h2 class="section-title">Interested in this home?</h2>
               <p class="subline" style="margin-bottom:16px;">
                 Want the full picture, comparable homes, or a private showing? Reach out and I’ll help you sort through it clearly and quickly.
@@ -1526,7 +1509,7 @@
               </div>
             </div>
 
-            <div class="details-grid">
+            <div class="details-grid listing-details">
               <div class="card details-subcard">
                 <h3>Property details</h3>
 
@@ -1576,7 +1559,7 @@
               </div>
             </div>
 
-            <div class="card details-card">
+            <div class="card details-card listing-mortgage">
               <h2 class="section-title">Mortgage calculator</h2>
 
               <div class="mortgage-grid">
@@ -1615,25 +1598,10 @@
               <button class="cta-btn primary" id="mortgageConsultBtn" type="button">Request mortgage consultant appointment</button>
             </div>
 
-            <div class="card details-card">
-              <h2 class="section-title">General location</h2>
-
-              <iframe
-                class="location-map"
-                src="${escapeHtml(mapEmbedUrl)}"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                title="General location map"
-              ></iframe>
-
-              <div class="map-actions">
-                <a class="cta-btn secondary" href="${escapeHtml(googleMapsLink)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
-              </div>
-            </div>
           </div>
 
           <div class="column">
-            <div class="card media-card">
+            <div class="card media-card listing-media">
               <div class="gallery-wrap">
                 ${currentPhotos.length ? `
                   <div class="gallery-main">
@@ -1684,6 +1652,22 @@
                   <p>If the tour doesn’t load here, the provider is likely blocking embedded viewing.</p>
                   <a class="tour-btn secondary" id="tourOpenNewTab" href="#" target="_blank" rel="noopener noreferrer">Open in new tab</a>
                 </div>
+              </div>
+            </div>
+
+            <div class="card details-card listing-location">
+              <h2 class="section-title">General location</h2>
+
+              <iframe
+                class="location-map"
+                src="${escapeHtml(mapEmbedUrl)}"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="General location map"
+              ></iframe>
+
+              <div class="map-actions">
+                <a class="cta-btn secondary" href="${escapeHtml(googleMapsLink)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
               </div>
             </div>
           </div>
