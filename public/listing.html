@@ -1620,16 +1620,18 @@
       document.querySelector('input[name="contactPreference"][value="text"]').checked = true;
       typeInput.value = type;
       const isShowing = type === "book_showing";
-      showingFields.hidden = !isShowing;
-      document.getElementById("leadDate").disabled = !isShowing;
-      document.getElementById("leadTime").disabled = !isShowing;
+      const isMortgage = type === "mortgage_consultant";
+      const isAppointment = isShowing || isMortgage;
+      showingFields.hidden = !isAppointment;
+      document.getElementById("leadDate").disabled = !isAppointment;
+      document.getElementById("leadTime").disabled = !isAppointment;
       const messageInput = document.getElementById("leadMessage");
-      messageInput.required = !isShowing;
-      messageInput.placeholder = isShowing
+      messageInput.required = !isAppointment;
+      messageInput.placeholder = isAppointment
         ? "Anything you'd like me to know?"
         : "What would you like to know about this property?";
-      document.getElementById("leadMessageLabel").textContent = isShowing ? "Message (optional)" : "Question";
-      title.textContent = type === "book_showing" ? "Book a Showing" : "Request More Info";
+      document.getElementById("leadMessageLabel").textContent = isAppointment ? "Message (optional)" : "Question";
+      title.textContent = isMortgage ? "Request Mortgage Consultant Appointment" : isShowing ? "Book a Showing" : "Request More Info";
       property.textContent = getAddress(listing);
       status.textContent = "";
       status.className = "lead-status";
@@ -1692,8 +1694,8 @@
           email,
           phone,
           contactPreference: preference,
-          preferredDate: type === "book_showing" ? document.getElementById("leadDate").value : "",
-          preferredTime: type === "book_showing" ? document.getElementById("leadTime").value.trim() : "",
+          preferredDate: type !== "request_info" ? document.getElementById("leadDate").value : "",
+          preferredTime: type !== "request_info" ? document.getElementById("leadTime").value.trim() : "",
           message,
           website: document.getElementById("leadWebsite").value,
           listingKey: String(listing.listing_key ?? ""),
@@ -1744,7 +1746,7 @@
       });
 
       button?.addEventListener("click", () => {
-        window.location.href = buildContactUrl("mortgage_consultant", listing);
+        openLeadForm("mortgage_consultant", listing);
       });
 
       calculateMortgage();
