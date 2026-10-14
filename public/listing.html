@@ -675,6 +675,17 @@
       }
     }
 
+    /* Explicit desktop order for the left information column. */
+    .page-grid > .column:first-child{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .page-grid > .column:first-child .listing-summary{ order:1; }
+    .page-grid > .column:first-child .listing-details{ order:2; }
+    .page-grid > .column:first-child .listing-contact{ order:3; }
+    .page-grid > .column:first-child .listing-mortgage{ order:4; }
+
     @media (max-width: 760px){
       .container{
         max-width:none;
@@ -697,14 +708,14 @@
         display:contents;
       }
 
-      /* Mobile order: photos/tour, map, summary, details,
-         mortgage, then contact. Explicit classes avoid ordering mistakes. */
+      /* Mobile order: photos/tour, summary/description,
+         listing details, map, interested/contact, mortgage. */
       .listing-media{ order:1; }
-      .listing-location{ order:2; }
-      .listing-summary{ order:3; }
-      .listing-details{ order:4; }
-      .listing-mortgage{ order:5; }
-      .listing-contact{ order:6; }
+      .listing-summary{ order:2; }
+      .listing-details{ order:3; }
+      .listing-location{ order:4; }
+      .listing-contact{ order:5; }
+      .listing-mortgage{ order:6; }
 
       .card{
         border-radius:0;
