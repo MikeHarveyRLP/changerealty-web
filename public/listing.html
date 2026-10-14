@@ -925,6 +925,7 @@
       cursor:pointer;
     }
     .contact-choice input{ margin:0; }
+    .lead-showing-fields[hidden]{ display:none; }
     .lead-showing-fields{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -1017,8 +1018,8 @@
         </div>
 
         <div class="field">
-          <label for="leadMessage">Message <span style="text-transform:none;font-weight:600;">(optional)</span></label>
-          <textarea id="leadMessage" name="message" maxlength="1000" placeholder="Anything you'd like me to know?"></textarea>
+          <label for="leadMessage" id="leadMessageLabel">Question</label>
+          <textarea id="leadMessage" name="message" maxlength="1000" placeholder="What would you like to know about this property?" required></textarea>
         </div>
 
         <div class="lead-honeypot" aria-hidden="true">
@@ -1618,7 +1619,16 @@
       form.reset();
       document.querySelector('input[name="contactPreference"][value="text"]').checked = true;
       typeInput.value = type;
-      showingFields.hidden = type !== "book_showing";
+      const isShowing = type === "book_showing";
+      showingFields.hidden = !isShowing;
+      document.getElementById("leadDate").disabled = !isShowing;
+      document.getElementById("leadTime").disabled = !isShowing;
+      const messageInput = document.getElementById("leadMessage");
+      messageInput.required = !isShowing;
+      messageInput.placeholder = isShowing
+        ? "Anything you'd like me to know?"
+        : "What would you like to know about this property?";
+      document.getElementById("leadMessageLabel").textContent = isShowing ? "Message (optional)" : "Question";
       title.textContent = type === "book_showing" ? "Book a Showing" : "Request More Info";
       property.textContent = getAddress(listing);
       status.textContent = "";
@@ -1669,6 +1679,13 @@
         }
 
         const type = document.getElementById("leadType").value;
+        const message = document.getElementById("leadMessage").value.trim();
+        if (type === "request_info" && !message) {
+          status.textContent = "Please enter your question.";
+          status.className = "lead-status error";
+          document.getElementById("leadMessage").focus();
+          return;
+        }
         const payload = {
           type,
           name: document.getElementById("leadName").value.trim(),
@@ -1677,7 +1694,7 @@
           contactPreference: preference,
           preferredDate: type === "book_showing" ? document.getElementById("leadDate").value : "",
           preferredTime: type === "book_showing" ? document.getElementById("leadTime").value.trim() : "",
-          message: document.getElementById("leadMessage").value.trim(),
+          message,
           website: document.getElementById("leadWebsite").value,
           listingKey: String(listing.listing_key ?? ""),
           mlsNumber: String(listing.mls_number ?? listing.mlsNumber ?? ""),
