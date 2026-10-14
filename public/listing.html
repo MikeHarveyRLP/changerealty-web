@@ -854,6 +854,102 @@
         height:280px;
       }
     }
+
+
+    .lead-modal{
+      position:fixed;
+      inset:0;
+      z-index:9000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(17,24,39,.72);
+    }
+    .lead-modal[hidden]{ display:none; }
+    .lead-dialog{
+      width:min(100%,560px);
+      max-height:90vh;
+      overflow:auto;
+      background:#fff;
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 24px 70px rgba(0,0,0,.28);
+    }
+    .lead-dialog-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .lead-dialog h2{ margin:0 0 4px; font-size:24px; }
+    .lead-dialog p{ margin:0; color:var(--muted); line-height:1.5; }
+    .lead-close{
+      flex:0 0 auto;
+      width:38px;
+      height:38px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      font-size:24px;
+      cursor:pointer;
+    }
+    .lead-form{ display:grid; gap:14px; }
+    .lead-form .field textarea{
+      width:100%;
+      min-height:90px;
+      resize:vertical;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:11px 12px;
+      font:inherit;
+      color:var(--text);
+    }
+    .contact-choice{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+    .contact-choice label{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      min-height:44px;
+      padding:8px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .contact-choice input{ margin:0; }
+    .lead-showing-fields{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .lead-status{
+      min-height:20px;
+      font-size:14px;
+      font-weight:700;
+    }
+    .lead-status.error{ color:#b91c1c; }
+    .lead-status.success{ color:#047857; }
+    .lead-honeypot{
+      position:absolute !important;
+      left:-9999px !important;
+      width:1px !important;
+      height:1px !important;
+      overflow:hidden !important;
+    }
+    @media (max-width:560px){
+      .lead-dialog{ padding:20px 16px; border-radius:16px; }
+      .contact-choice{ grid-template-columns:1fr; }
+      .lead-showing-fields{ grid-template-columns:1fr; }
+    }
+
   </style>
 </head>
 <body>
@@ -869,6 +965,70 @@
 
     <div id="content">
       <div class="status">Loading listing…</div>
+    </div>
+  </div>
+
+  <div class="lead-modal" id="leadModal" hidden aria-modal="true" role="dialog" aria-labelledby="leadTitle">
+    <div class="lead-dialog">
+      <div class="lead-dialog-head">
+        <div>
+          <h2 id="leadTitle">Request more info</h2>
+          <p id="leadProperty"></p>
+        </div>
+        <button type="button" class="lead-close" id="leadClose" aria-label="Close form">×</button>
+      </div>
+
+      <form class="lead-form" id="leadForm">
+        <input type="hidden" id="leadType" name="type" value="request_info" />
+
+        <div class="field">
+          <label for="leadName">Name</label>
+          <input id="leadName" name="name" type="text" maxlength="100" autocomplete="name" required />
+        </div>
+
+        <div class="field">
+          <label for="leadEmail">Email</label>
+          <input id="leadEmail" name="email" type="email" maxlength="160" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="leadPhone">Phone</label>
+          <input id="leadPhone" name="phone" type="tel" maxlength="30" autocomplete="tel" />
+        </div>
+
+        <div class="field">
+          <label>How would you prefer to be contacted?</label>
+          <div class="contact-choice">
+            <label><input type="radio" name="contactPreference" value="text" checked /> Text</label>
+            <label><input type="radio" name="contactPreference" value="call" /> Phone call</label>
+            <label><input type="radio" name="contactPreference" value="email" /> Email</label>
+          </div>
+        </div>
+
+        <div class="lead-showing-fields" id="leadShowingFields" hidden>
+          <div class="field">
+            <label for="leadDate">Preferred date</label>
+            <input id="leadDate" name="preferredDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="leadTime">Preferred time</label>
+            <input id="leadTime" name="preferredTime" type="text" maxlength="50" placeholder="e.g. 2:00 PM" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="leadMessage">Message <span style="text-transform:none;font-weight:600;">(optional)</span></label>
+          <textarea id="leadMessage" name="message" maxlength="1000" placeholder="Anything you'd like me to know?"></textarea>
+        </div>
+
+        <div class="lead-honeypot" aria-hidden="true">
+          <label for="leadWebsite">Website</label>
+          <input id="leadWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="lead-status" id="leadStatus" aria-live="polite"></div>
+        <button class="cta-btn primary" id="leadSubmit" type="submit">Send request</button>
+      </form>
     </div>
   </div>
 
@@ -1444,6 +1604,116 @@
       closeBtn?.addEventListener("click", closeTourPanel);
     }
 
+    function openLeadForm(type, listing) {
+      const modal = document.getElementById("leadModal");
+      const title = document.getElementById("leadTitle");
+      const property = document.getElementById("leadProperty");
+      const typeInput = document.getElementById("leadType");
+      const showingFields = document.getElementById("leadShowingFields");
+      const status = document.getElementById("leadStatus");
+      const form = document.getElementById("leadForm");
+
+      if (!modal || !form) return;
+
+      form.reset();
+      document.querySelector('input[name="contactPreference"][value="text"]').checked = true;
+      typeInput.value = type;
+      showingFields.hidden = type !== "book_showing";
+      title.textContent = type === "book_showing" ? "Book a Showing" : "Request More Info";
+      property.textContent = getAddress(listing);
+      status.textContent = "";
+      status.className = "lead-status";
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      document.getElementById("leadName")?.focus();
+    }
+
+    function closeLeadForm() {
+      const modal = document.getElementById("leadModal");
+      if (!modal) return;
+      modal.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    function attachLeadEvents(listing) {
+      const modal = document.getElementById("leadModal");
+      const form = document.getElementById("leadForm");
+      const submit = document.getElementById("leadSubmit");
+      const status = document.getElementById("leadStatus");
+
+      document.getElementById("bookShowingBtn")?.addEventListener("click", () => openLeadForm("book_showing", listing));
+      document.getElementById("requestInfoBtn")?.addEventListener("click", () => openLeadForm("request_info", listing));
+      document.getElementById("leadClose")?.addEventListener("click", closeLeadForm);
+
+      modal?.addEventListener("click", event => {
+        if (event.target === modal) closeLeadForm();
+      });
+
+      form?.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const preference = form.querySelector('input[name="contactPreference"]:checked')?.value || "text";
+        const phone = document.getElementById("leadPhone").value.trim();
+        const email = document.getElementById("leadEmail").value.trim();
+
+        if ((preference === "text" || preference === "call") && !phone) {
+          status.textContent = "Please enter a phone number for text or phone contact.";
+          status.className = "lead-status error";
+          return;
+        }
+
+        if (preference === "email" && !email) {
+          status.textContent = "Please enter an email address for email contact.";
+          status.className = "lead-status error";
+          return;
+        }
+
+        const type = document.getElementById("leadType").value;
+        const payload = {
+          type,
+          name: document.getElementById("leadName").value.trim(),
+          email,
+          phone,
+          contactPreference: preference,
+          preferredDate: type === "book_showing" ? document.getElementById("leadDate").value : "",
+          preferredTime: type === "book_showing" ? document.getElementById("leadTime").value.trim() : "",
+          message: document.getElementById("leadMessage").value.trim(),
+          website: document.getElementById("leadWebsite").value,
+          listingKey: String(listing.listing_key ?? ""),
+          mlsNumber: String(listing.mls_number ?? listing.mlsNumber ?? ""),
+          address: getAddress(listing),
+          listingUrl: window.location.href
+        };
+
+        submit.disabled = true;
+        submit.textContent = "Sending…";
+        status.textContent = "";
+        status.className = "lead-status";
+
+        try {
+          const response = await fetch(`${API_BASE}/api/inquiries`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(result.error || "Unable to send request.");
+
+          status.textContent = "Thanks — your request has been sent.";
+          status.className = "lead-status success";
+          submit.textContent = "Sent";
+
+          setTimeout(closeLeadForm, 1400);
+        } catch (error) {
+          status.textContent = error.message || "Unable to send request. Please try again.";
+          status.className = "lead-status error";
+          submit.disabled = false;
+          submit.textContent = "Send request";
+        }
+      });
+    }
+
     function attachMortgageEvents(listing) {
       const priceInput = document.getElementById("calcPrice");
       const downInput = document.getElementById("calcDown");
@@ -1520,8 +1790,8 @@
               </p>
 
               <div class="cta-stack">
-                <a class="cta-btn primary" href="${escapeHtml(buildContactUrl("book_showing", listing))}">Book a showing</a>
-                <a class="cta-btn secondary" href="${escapeHtml(buildContactUrl("request_info", listing))}">Request more info</a>
+                <button class="cta-btn primary" id="bookShowingBtn" type="button">Book a showing</button>
+                <button class="cta-btn secondary" id="requestInfoBtn" type="button">Request more info</button>
                 <a class="cta-btn secondary" href="/map">See more listings</a>
               </div>
             </div>
@@ -1693,6 +1963,7 @@
 
       attachGalleryEvents();
       attachTourEvents();
+      attachLeadEvents(listing);
       attachMortgageEvents(listing);
       if (currentPhotos.length) setMainPhoto(0);
     }
