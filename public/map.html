@@ -279,6 +279,37 @@ html, body{
   height:68px;
 }
 }
+
+/* Search actions and advanced options */
+.search-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;}
+.search-heading h1{font-size:18px;margin:0;}
+.search-actions{display:grid;grid-template-columns:repeat(3,minmax(100px,1fr));gap:8px;}
+.topbar-inner{grid-template-columns:repeat(4,minmax(0,1fr));}
+.search-actions .btn{white-space:nowrap;padding:0 14px;}
+.main{min-height:0;flex:1;}
+.advanced-dialog{border:1px solid var(--border);border-radius:18px;padding:24px;width:min(540px,calc(100% - 28px));max-height:90dvh;overflow:auto;color:var(--text);box-shadow:var(--shadow);}
+.advanced-dialog::backdrop{background:rgba(17,24,39,.5);}
+.advanced-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;}
+.advanced-head h2{font-size:21px;margin:0;}
+.close-advanced{border:0;background:transparent;font-size:28px;line-height:1;padding:8px;cursor:pointer;color:var(--text);}
+.advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.advanced-grid label{display:block;font-size:13px;margin-bottom:7px;font-weight:600;}
+.advanced-grid select{width:100%;height:44px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:white;font:inherit;}
+.advanced-type{grid-column:1/-1;}
+.advanced-help{font-size:13px;color:var(--muted);line-height:1.5;margin:14px 0 22px;}
+.advanced-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.search-error{color:#b91c1c;font-size:13px;margin:10px 0 0;}
+.search-error:empty{display:none;}
+@media(max-width:900px){
+ .search-heading{display:block;}
+ .search-heading h1{margin-bottom:10px;font-size:17px;}
+ .search-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+ .search-actions .btn{height:36px;font-size:12px;padding:0 6px;}
+ .topbar-inner{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .topbar{padding:12px;}
+ .advanced-dialog{padding:18px;}
+}
+
 </style>
 </head>
 
@@ -288,10 +319,18 @@ html, body{
 
   <!-- TOP FILTER BAR -->
   <div class="topbar">
+    <div class="search-heading">
+      <h1>Find a property</h1>
+      <div class="search-actions" aria-label="Search actions">
+        <button class="btn" id="applyFiltersBtn" type="button">Search</button>
+        <button class="btn secondary" id="resetFiltersBtn" type="button">Reset</button>
+        <button class="btn secondary" id="advancedFiltersBtn" type="button" aria-haspopup="dialog" aria-controls="advancedDialog">Advanced</button>
+      </div>
+    </div>
     <div class="topbar-inner">
 
       <div>
-        <label>Mode</label>
+        <label for="mode">Mode</label>
         <select id="mode">
           <option value="sale">For Sale</option>
           <option value="lease">For Lease</option>
@@ -300,31 +339,25 @@ html, body{
       </div>
 
       <div>
-        <label>Min Price</label>
+        <label for="minPrice">Min price / rate</label>
         <input id="minPrice" type="text" placeholder="$500,000"/>
       </div>
 
       <div>
-        <label>Max Price</label>
+        <label for="maxPrice">Max price / rate</label>
         <input id="maxPrice" type="text" placeholder="$1,000,000"/>
       </div>
 
       <div>
-        <label>City</label>
+        <label for="cityFilter">City</label>
         <input id="cityFilter"/>
       </div>
 
-      <div>
-        <button class="btn" id="applyFiltersBtn">Search</button>
-      </div>
-
-      <div>
-        <button class="btn secondary" id="resetFiltersBtn">Reset</button>
-      </div>
 
     </div>
   </div>
 
+  <p class="search-error" id="searchError" role="alert"></p>
   <!-- MAIN -->
   <div class="main">
 
@@ -347,6 +380,20 @@ html, body{
 
 </div>
 
+<dialog class="advanced-dialog" id="advancedDialog" aria-labelledby="advancedTitle">
+ <form id="advancedForm">
+  <div class="advanced-head"><h2 id="advancedTitle">Advanced search</h2><button class="close-advanced" id="closeAdvancedBtn" type="button" aria-label="Close advanced search">&times;</button></div>
+  <div class="advanced-grid">
+   <div><label for="minBeds">Bedrooms</label><select id="minBeds"><option value="">Any</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option><option value="6">6+</option></select></div>
+   <div><label for="minBaths">Bathrooms</label><select id="minBaths"><option value="">Any</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select></div>
+   <div class="advanced-type"><label for="buildingType">Building type</label><select id="buildingType">
+    <option value="">Any building type</option><option value="house">House</option><option value="townhouse">Townhouse</option><option value="apartment">Apartment</option><option value="multi_unit">Duplex / multi-unit</option><option value="other">Other / unspecified</option>
+   </select></div>
+  </div>
+  <p class="advanced-help">Bedrooms include above- and below-grade bedrooms as reported. Building type describes the structure; condo ownership can apply to several building types.</p>
+  <div class="advanced-actions"><button class="btn secondary" id="clearAdvancedBtn" type="button">Clear options</button><button class="btn" type="submit">Apply filters</button></div>
+ </form>
+</dialog>
 <script src="/config.js"></script>
 
   <script>
@@ -361,8 +408,49 @@ html, body{
     let markerById = new Map();
     let lastListings = [];
     let fetchTimer = null;
+    let searchRequest = 0;
+    let advancedFilters = { minBeds: "", minBaths: "", buildingType: "" };
+    const buildingTypes = ["house", "townhouse", "apartment", "multi_unit", "other"];
+
+    function updateAdvancedButton() {
+      const count = Object.values(advancedFilters).filter(Boolean).length;
+      document.getElementById("advancedFiltersBtn").textContent = count ? `Advanced (${count})` : "Advanced";
+    }
+
+    function setupSearchControls() {
+      const dialog = document.getElementById("advancedDialog");
+      const ids = ["minBeds", "minBaths", "buildingType"];
+      document.getElementById("advancedFiltersBtn").addEventListener("click", () => {
+        ids.forEach(id => { document.getElementById(id).value = advancedFilters[id]; });
+        dialog.showModal();
+      });
+      document.getElementById("closeAdvancedBtn").addEventListener("click", () => dialog.close());
+      dialog.addEventListener("click", event => { if (event.target === dialog) {
+        const rect = dialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+      }});
+      document.getElementById("clearAdvancedBtn").addEventListener("click", () => ids.forEach(id => { document.getElementById(id).value = ""; }));
+      document.getElementById("advancedForm").addEventListener("submit", event => {
+        event.preventDefault();
+        ids.forEach(id => { advancedFilters[id] = document.getElementById(id).value; });
+        updateAdvancedButton();dialog.close();loadListingsForMap();
+      });
+      document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
+      document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+        document.getElementById("mode").value = "sale";
+        ["minPrice", "maxPrice", "cityFilter", ...ids].forEach(id => { document.getElementById(id).value = ""; });
+        advancedFilters = {minBeds:"",minBaths:"",buildingType:""};
+        document.getElementById("searchError").textContent = "";
+        updateAdvancedButton();updatePageUrlFromFilters();loadListingsForMap();
+      });
+      ["minPrice", "maxPrice", "cityFilter"].forEach(id => document.getElementById(id).addEventListener("keydown", event => {
+        if(event.key === "Enter") {event.preventDefault();loadListingsForMap();}
+      }));
+      loadFiltersFromUrl();updateAdvancedButton();
+    }
 
     function formatPrice(listing) {
+      if (listing.is_lease) return getMarkerLabel(listing);
       const price = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
       if (price === null || price === undefined || price === "") {
         return listing.is_lease ? "For Lease" : "Price on request";
@@ -498,12 +586,13 @@ function getPhotoUrl(listing) {
     mode: document.getElementById("mode").value
   });
 
-  const minPrice = document.getElementById("minPrice").value.trim();
-  const maxPrice = document.getElementById("maxPrice").value.trim();
+  const minPrice = parsePriceInput(document.getElementById("minPrice").value);
+  const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
   const city = document.getElementById("cityFilter").value.trim();
 
-  if (minPrice) params.set("minPrice", minPrice);
-  if (maxPrice) params.set("maxPrice", maxPrice);
+  if (minPrice !== null) params.set("minPrice", minPrice);
+  if (maxPrice !== null) params.set("maxPrice", maxPrice);
+  Object.entries(advancedFilters).forEach(([key,value]) => { if(value) params.set(key,value); });
   if (city) params.set("city", city);
 
   return params;
@@ -529,7 +618,14 @@ function getMarkerLabel(listing) {
   if (listing.is_lease) {
     const lease = listing.lease_amount ?? listing.leaseAmount ?? null;
     const formatted = formatCompactPrice(lease);
-    return formatted ? `${formatted}/mo` : "Lease";
+    if(!formatted) return "Lease";
+    const raw=getRawObject(listing) || {};
+    const unit=String(raw.LeasePerUnit || listing.lease_per_unit || "").toLowerCase();
+    const frequency=String(raw.LeaseAmountFrequency || "").toLowerCase();
+    let suffix=/square feet|sq\.?\s*ft|\bsf\b/.test(unit) ? "/sq ft" : /square met|sq\.?\s*m/.test(unit) ? "/sq m" : /acre/.test(unit) ? "/acre" : "";
+    const period=/month/.test(frequency) ? "/mo" : /week/.test(frequency) ? "/wk" : /day|daily/.test(frequency) ? "/day" : /year|annual/.test(frequency) ? "/yr" : "";
+    if(suffix) return formatted+suffix+period;
+    return formatted+(period || (/month/.test(unit)?"/mo":""));
   }
 
   const sale = listing.list_price ?? listing.listPrice ?? listing.price ?? null;
@@ -542,7 +638,7 @@ const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
       const cityFilter = document.getElementById("cityFilter").value.trim().toLowerCase();
 
       return listings.filter(listing => {
-        const price = Number(listing.list_price ?? listing.listPrice ?? listing.price ?? NaN);
+        const price = Number(listing.is_lease ? listing.lease_amount ?? NaN : listing.list_price ?? listing.listPrice ?? listing.price ?? NaN);
         const city = String(listing.city || "").toLowerCase();
 
         if (minPrice && !Number.isNaN(price) && price < minPrice) return false;
@@ -564,9 +660,11 @@ function updatePageUrlFromFilters() {
 const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
   const city = document.getElementById("cityFilter").value.trim();
 
+  Object.entries(advancedFilters).forEach(([key,value]) => { if(value) params.set(key,value); });
   if (mode && mode !== "sale") params.set("mode", mode);
-  if (minPrice) params.set("minPrice", minPrice);
-  if (maxPrice) params.set("maxPrice", maxPrice);
+  if (minPrice !== null) params.set("minPrice", minPrice);
+  if (maxPrice !== null) params.set("maxPrice", maxPrice);
+  Object.entries(advancedFilters).forEach(([key,value]) => { if(value) params.set(key,value); });
   if (city) params.set("city", city);
 
   const query = params.toString();
@@ -589,6 +687,11 @@ function loadFiltersFromUrl() {
   if (minPrice) document.getElementById("minPrice").value = minPrice;
   if (maxPrice) document.getElementById("maxPrice").value = maxPrice;
   if (city) document.getElementById("cityFilter").value = city;
+  for (const [key,max] of [["minBeds",6],["minBaths",5]]) {
+    const value=params.get(key);
+    advancedFilters[key]=value && /^[1-9]\d*$/.test(value) && Number(value)<=max ? value : "";
+  }
+  advancedFilters.buildingType=buildingTypes.includes(params.get("buildingType")) ? params.get("buildingType") : "";
 }
 
     function renderList(listings) {
@@ -735,7 +838,16 @@ const photoUrl = getPhotoUrl(listing);
     }
 
     async function loadListingsForMap() {
+      const min=parsePriceInput(document.getElementById("minPrice").value);
+      const max=parsePriceInput(document.getElementById("maxPrice").value);
+      const error=document.getElementById("searchError");
+      if ((min!==null && (!Number.isFinite(min)||min<0)) || (max!==null && (!Number.isFinite(max)||max<0)) || (min!==null && max!==null && min>max)) {
+        error.textContent="Enter valid prices or rates, with the minimum no higher than the maximum.";return;
+      }
+      error.textContent="";
+      updatePageUrlFromFilters();
       if (!map || !map.getBounds()) return;
+      const request=++searchRequest;
       setStatus("Loading…");
 
       const params = getVisibleBoundsParams();
@@ -749,6 +861,7 @@ updatePageUrlFromFilters();
         if (!resp.ok) throw new Error(`API returned ${resp.status}`);
 
         const payload = await resp.json();
+        if(request !== searchRequest) return;
         const rawListings = Array.isArray(payload) ? payload : (payload.listings || payload.data || []);
         console.log("FIRST LISTING", rawListings[0]);
         const listings = applyClientFilters(rawListings).filter(x => getLatLng(x));
@@ -758,6 +871,7 @@ updatePageUrlFromFilters();
         renderMarkers(listings);
         setStatus("Updated");
       } catch (err) {
+        if(request !== searchRequest) return;
         console.error(err);
         document.getElementById("resultsSummary").textContent = "Could not load listings";
         document.getElementById("resultsList").innerHTML = '<div class="empty">Error loading listings from the API.</div>';
@@ -883,17 +997,10 @@ loadFiltersFromUrl();
 centerOnUserLocation();      
 map.addListener("idle", debounceLoad);
 
-      document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
-document.getElementById("resetFiltersBtn").addEventListener("click", () => {
-  document.getElementById("mode").value = "sale";
-  document.getElementById("minPrice").value = "";
-  document.getElementById("maxPrice").value = "";
-  document.getElementById("cityFilter").value = "";
-  updatePageUrlFromFilters();
-  loadListingsForMap();
-});
+
     }
 
+    setupSearchControls();
     window.initMap = initMap;
   </script>
 
