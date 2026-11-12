@@ -283,9 +283,9 @@ html, body{
 /* Search actions and advanced options */
 .search-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;}
 .search-heading h1{font-size:18px;margin:0;}
-.search-actions{display:grid;grid-template-columns:repeat(3,minmax(100px,1fr));gap:8px;}
+.search-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px;flex-shrink:0;}
 .topbar-inner{grid-template-columns:repeat(4,minmax(0,1fr));}
-.search-actions .btn{white-space:nowrap;padding:0 14px;}
+.search-actions .btn{white-space:nowrap;padding:0 6px;font-size:13px;min-width:0;}
 .main{min-height:0;flex:1;}
 .advanced-dialog{border:1px solid var(--border);border-radius:18px;padding:24px;width:min(540px,calc(100% - 28px));max-height:90dvh;overflow:auto;color:var(--text);box-shadow:var(--shadow);}
 .advanced-dialog::backdrop{background:rgba(17,24,39,.5);}
@@ -303,7 +303,7 @@ html, body{
 @media(max-width:900px){
  .search-heading{display:block;}
  .search-heading h1{margin-bottom:10px;font-size:17px;}
- .search-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+ .search-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 12px;}
  .search-actions .btn{height:36px;font-size:12px;padding:0 6px;}
  .topbar-inner{grid-template-columns:repeat(2,minmax(0,1fr));}
  .topbar{padding:12px;}
@@ -321,16 +321,11 @@ html, body{
   <div class="topbar">
     <div class="search-heading">
       <h1>Find a property</h1>
-      <div class="search-actions" aria-label="Search actions">
-        <button class="btn" id="applyFiltersBtn" type="button">Search</button>
-        <button class="btn secondary" id="resetFiltersBtn" type="button">Reset</button>
-        <button class="btn secondary" id="advancedFiltersBtn" type="button" aria-haspopup="dialog" aria-controls="advancedDialog">Advanced</button>
-      </div>
     </div>
     <div class="topbar-inner">
 
       <div>
-        <label for="mode">Mode</label>
+        <label for="mode">Listing type</label>
         <select id="mode">
           <option value="sale">For Sale</option>
           <option value="lease">For Lease</option>
@@ -363,6 +358,11 @@ html, body{
 
     <!-- LEFT -->
     <aside class="sidebar">
+      <div class="search-actions" aria-label="Search actions">
+        <button class="btn" id="applyFiltersBtn" type="button">Search</button>
+        <button class="btn secondary" id="resetFiltersBtn" type="button">Reset</button>
+        <button class="btn secondary" id="advancedFiltersBtn" type="button" aria-haspopup="dialog" aria-controls="advancedDialog">Advanced</button>
+      </div>
       <div class="results-top">
         <div id="resultsSummary">Loading...</div>
         <div id="statusText">...</div>
