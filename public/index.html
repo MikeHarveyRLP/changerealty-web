@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mike Harvey | Change Realty</title>
+<meta name="description" content="Where’s your next change? Search homes in Waterloo Region and explore Royal LePage Wolle Realty listings with Mike Harvey.">
+<link rel="stylesheet" href="/assets/site.css"><script src="/config.js"></script><script src="/assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="contact-bar"><a href="tel:5195888088">Call or text: 519-588-8088</a><span aria-hidden="true">/</span><a href="mailto:Mike@changerealty.ca">Contact me</a></div>
+<header class="site-header">
+ <a class="wordmark" href="/" aria-label="Mike Harvey, Change Realty home">MIKE HARVEY<span>CHANGE REALTY</span></a>
+ <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">☰</span></button>
+ <nav id="navigation" aria-label="Main navigation">
+  <a href="/" aria-current="page">Home</a><a href="/about.html">About Me</a><a href="/map">Search</a>
+  <details><summary>Buying</summary><div><a href="https://changerealty.ca/buying.html">Buying Resources</a><a href="https://changerealty.ca/mortgage-calculator.html">Mortgage Calculator</a></div></details>
+  <details><summary>Selling</summary><div><a href="https://changerealty.ca/selling.html">Selling Resources</a><a href="https://changerealty.ca/home-evaluation.html">Home Evaluation</a></div></details>
+  <a href="https://changerealty.ca/heretohelp.html">Helpful Tools</a>
+ </nav>
+</header>
+<main id="main">
+ <section class="hero" aria-labelledby="hero-title">
+  <video id="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="/assets/hero.mp4" type="video/mp4"></video>
+  <div class="hero-shade"></div>
+  <div class="hero-content"><p class="eyebrow">WATERLOO REGION &amp; BEYOND</p><h1 id="hero-title">Where’s your<br class="mobile-break"> next change?</h1>
+   <form class="home-search" action="/map" method="get" role="search" aria-label="Find a property">
+    <label class="location-field"><span>Location or MLS®</span><input type="search" name="q" placeholder="City, address or MLS® number" aria-label="City, address or MLS number"></label>
+    <label class="type-field"><span>Listing type</span><select name="mode"><option value="sale">For Sale</option><option value="lease">For Lease</option><option value="all">All listings</option></select></label>
+    <button type="submit">Search <span aria-hidden="true">↗</span></button>
+   </form>
+  </div>
+  <button class="video-control" type="button" aria-label="Pause background video">Pause video <span aria-hidden="true">Ⅱ</span></button>
+ </section>
+ <section class="experience" aria-labelledby="experience-title"><p class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p><h2 id="experience-title">Why your real estate<br>experience matters.</h2><p>You are about to complete the biggest transaction of your life. Something that must be done right and with care. Let me help you make sure that is what happens.</p></section>
+ <section class="office-section" aria-labelledby="office-title">
+  <div class="section-heading"><div><p class="eyebrow">ROYAL LEPAGE WOLLE REALTY</p><h2 id="office-title">Our office listings</h2></div><div class="carousel-controls"><button id="previous" aria-label="Previous listings" disabled>←</button><button id="next" aria-label="Next listings" disabled>→</button></div></div>
+  <p id="listing-status" class="listing-status" role="status">Loading office listings…</p>
+  <div id="office-listings" class="carousel" aria-label="Wolle office listings" tabindex="0"></div>
+ </section>
+</main>
+<footer><a class="wordmark" href="/">MIKE HARVEY<span>CHANGE REALTY</span></a><div><a href="tel:5195888088">519-588-8088</a><a href="mailto:Mike@changerealty.ca">Mike@changerealty.ca</a><p>Royal LePage Wolle Realty<br>7-180 Northfield Dr W, Waterloo, ON N2L 0C7</p></div><div class="footer-bottom"><span>© <span id="year">2026</span> Mike Harvey. All rights reserved.</span><a href="https://changerealty.ca/privacy.html">Privacy Policy</a></div></footer>
+</body></html>

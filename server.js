@@ -24,7 +24,7 @@ app.get("/map", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.redirect("/map");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(PORT, () => {

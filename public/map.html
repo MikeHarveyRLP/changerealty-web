@@ -346,6 +346,7 @@ html, body{
       <div>
         <label for="cityFilter">City</label>
         <input id="cityFilter"/>
+      </div><div><label for="keywordFilter">Address, city or MLS®</label><input id="keywordFilter" type="search"/>
       </div>
 
 
@@ -438,12 +439,12 @@ html, body{
       document.getElementById("applyFiltersBtn").addEventListener("click", loadListingsForMap);
       document.getElementById("resetFiltersBtn").addEventListener("click", () => {
         document.getElementById("mode").value = "sale";
-        ["minPrice", "maxPrice", "cityFilter", ...ids].forEach(id => { document.getElementById(id).value = ""; });
+        ["minPrice", "maxPrice", "cityFilter", "keywordFilter", ...ids].forEach(id => { document.getElementById(id).value = ""; });
         advancedFilters = {minBeds:"",minBaths:"",buildingType:""};
         document.getElementById("searchError").textContent = "";
         updateAdvancedButton();updatePageUrlFromFilters();loadListingsForMap();
       });
-      ["minPrice", "maxPrice", "cityFilter"].forEach(id => document.getElementById(id).addEventListener("keydown", event => {
+      ["minPrice", "maxPrice", "cityFilter", "keywordFilter"].forEach(id => document.getElementById(id).addEventListener("keydown", event => {
         if(event.key === "Enter") {event.preventDefault();loadListingsForMap();}
       }));
       loadFiltersFromUrl();updateAdvancedButton();
@@ -594,6 +595,8 @@ function getPhotoUrl(listing) {
   if (maxPrice !== null) params.set("maxPrice", maxPrice);
   Object.entries(advancedFilters).forEach(([key,value]) => { if(value) params.set(key,value); });
   if (city) params.set("city", city);
+  const keyword = document.getElementById("keywordFilter").value.trim();
+  if (keyword) { params.set("q", keyword); params.set("searchScope", "location"); }
 
   return params;
 }
@@ -666,6 +669,8 @@ const maxPrice = parsePriceInput(document.getElementById("maxPrice").value);
   if (maxPrice !== null) params.set("maxPrice", maxPrice);
   Object.entries(advancedFilters).forEach(([key,value]) => { if(value) params.set(key,value); });
   if (city) params.set("city", city);
+  const keyword = document.getElementById("keywordFilter").value.trim();
+  if (keyword) { params.set("q", keyword); params.set("searchScope", "location"); }
 
   const query = params.toString();
   const newUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
@@ -679,6 +684,7 @@ function loadFiltersFromUrl() {
   const minPrice = params.get("minPrice");
   const maxPrice = params.get("maxPrice");
   const city = params.get("city");
+  document.getElementById("keywordFilter").value = params.get("q") || "";
 
   if (mode && ["sale", "lease", "all"].includes(mode)) {
     document.getElementById("mode").value = mode;
