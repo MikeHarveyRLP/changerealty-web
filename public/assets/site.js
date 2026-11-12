@@ -21,6 +21,37 @@
  previous.addEventListener('click',()=>track.scrollBy({left:-track.clientWidth,behavior:reduced()?'instant':'smooth'}));
  next.addEventListener('click',()=>track.scrollBy({left:track.clientWidth,behavior:reduced()?'instant':'smooth'}));
  track.addEventListener('scroll',updateArrows,{passive:true});new ResizeObserver(updateArrows).observe(track);
+ // Advance one visible page every five seconds, wrapping after the last page.
+ const carousel=document.querySelector('.office-section');
+ const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+ const pause=document.createElement('button');
+ pause.type='button';pause.textContent='Ⅱ';pause.setAttribute('aria-label','Pause automatic listing rotation');
+ next.before(pause);
+ let timer=null,paused=motionPreference.matches,hovered=false,touching=false;
+ const pauseLabel=()=>{pause.textContent=paused?'▷':'Ⅱ';pause.setAttribute('aria-label',paused?'Start automatic listing rotation':'Pause automatic listing rotation')};
+ const schedule=()=>{
+  clearTimeout(timer);
+  if(paused||hovered||touching||document.hidden||carousel.contains(document.activeElement))return;
+  timer=setTimeout(()=>{
+   if(track.scrollWidth>track.clientWidth+5){
+    const atEnd=track.scrollLeft+track.clientWidth>=track.scrollWidth-5;
+    track.scrollTo({left:atEnd?0:track.scrollLeft+track.clientWidth,behavior:reduced()?'instant':'smooth'});
+   }
+   schedule();
+  },5000);
+ };
+ pause.addEventListener('click',()=>{paused=!paused;pauseLabel();schedule()});
+ carousel.addEventListener('mouseenter',()=>{hovered=true;schedule()});
+ carousel.addEventListener('mouseleave',()=>{hovered=false;schedule()});
+ carousel.addEventListener('focusin',schedule);
+ carousel.addEventListener('focusout',()=>setTimeout(schedule,0));
+ track.addEventListener('pointerdown',()=>{touching=true;schedule()});
+ window.addEventListener('pointerup',()=>{if(touching){touching=false;schedule()}});
+ window.addEventListener('pointercancel',()=>{touching=false;schedule()});
+ document.addEventListener('visibilitychange',schedule);
+ motionPreference.addEventListener('change',()=>{paused=motionPreference.matches;pauseLabel();schedule()});
+ previous.addEventListener('click',schedule);next.addEventListener('click',schedule);
+ pauseLabel();schedule();
  const money=n=>new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n);
  function price(l){
   if(!l.is_lease)return money(Number(l.list_price));
