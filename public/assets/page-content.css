@@ -1,0 +1,5 @@
+[data-page-copy]{white-space:pre-line}
+.cms-page-active.cms-page-body-font main [data-page-copy]{font-family:var(--page-body-font)}
+.cms-page-active.cms-page-heading-font main :is(h1,h2,h3)[data-page-copy]{font-family:var(--page-heading-font)}
+.cms-page-active.cms-page-heading-size main h1[data-page-copy]{font-size:clamp(26px,5vw,var(--page-heading-size))}
+.cms-page-active.cms-page-body-size main p[data-page-copy]{font-size:var(--page-body-size)}

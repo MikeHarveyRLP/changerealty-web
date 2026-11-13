@@ -44,6 +44,28 @@ app.get("/api/content/homepage", async (req, res) => {
   }
 });
 
+// Published page copy, with fixed document IDs and safe static fallback.
+const pageIds = new Set(["about", "buying", "selling", "mortgage", "evaluation", "tools", "waste", "search"]);
+const pageCache = new Map();
+app.get("/api/content/pages/:page", async (req,res) => {
+ res.setHeader("Cache-Control","public, max-age=30");
+ const key=req.params.page;
+ if(!pageIds.has(key))return res.status(404).json({content:null});
+ const project=String(process.env.SANITY_PROJECT_ID||""),dataset=String(process.env.SANITY_DATASET||"production");
+ if(!/^[a-z0-9]{3,32}$/.test(project)||!/^[a-z0-9_-]{1,64}$/.test(dataset))return res.json({content:null});
+ const cached=pageCache.get(key);
+ if(cached&&Date.now()-cached.at<60000)return res.json({content:cached.content});
+ try {
+  const query='*[_type == $type && _id == $id][0]{copy,headingFont,bodyFont,headingSize,bodySize,"portraitUrl":portrait.asset->url}';
+  const params=new URLSearchParams({query,'$id':JSON.stringify('page-'+key),'$type':JSON.stringify('page_'+key),perspective:'published'});
+  const response=await fetch('https://'+project+'.apicdn.sanity.io/v2025-02-19/data/query/'+dataset+'?'+params,{signal:AbortSignal.timeout(4000)});
+  if(!response.ok)throw Error('Content unavailable');
+  const content=(await response.json()).result||null;
+  if(content)pageCache.set(key,{content,at:Date.now()});
+  return res.json({content});
+ }catch{return res.json({content:cached&&Date.now()-cached.at<900000?cached.content:null});}
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get(["/studio", "/studio/*"], (req, res) => {

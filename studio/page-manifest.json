@@ -1,0 +1,660 @@
+[
+  {
+    "key": "about",
+    "title": "About Me",
+    "path": "/about.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "YOUR WATERLOO REAL ESTATE EXPERT",
+        "value": "YOUR WATERLOO REAL ESTATE EXPERT",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: About Mike Harvey",
+        "value": "About Mike Harvey",
+        "multiline": false,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Mike has called the Waterloo Region home since his early childhood, building a vast s",
+        "value": "Mike has called the Waterloo Region home since his early childhood, building a vast social and professional network in the area. His extensive knowledge of the region has been a key factor in his successful real estate career, where he co-founded The Harvey Real Estate Group back in 2011. With over a dozen years of growth and success, Mike is now embarking on a new path to ‘Change’ the way real estate is experienced.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "With almost 20 years of experience in the construction industry—both on the ground an",
+        "value": "With almost 20 years of experience in the construction industry—both on the ground and in management—Mike has spent considerable time building and renovating homes across the region. This hands-on expertise has shaped his approach to real estate, making him a valuable resource for clients seeking advice on improvement projects, whether large renovations or smaller enhancements.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy005",
+        "title": "Known for his hard work, knowledge, and personable nature, Mike earns the trust and r",
+        "value": "Known for his hard work, knowledge, and personable nature, Mike earns the trust and respect of his clients. He approaches his real estate practice with honesty and commitment, ensuring that buyers and sellers receive the highest level of service. His ability to connect with clients and understand their goals guarantees a focus on their satisfaction and an attention to detail that sets him apart.",
+        "multiline": true,
+        "tag": "p"
+      }
+    ]
+  },
+  {
+    "key": "buying",
+    "title": "Buying Resources",
+    "path": "/buying.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "BUYING",
+        "value": "BUYING",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: Your next home. A clear path forward.",
+        "value": "Your next home.\nA clear path forward.",
+        "multiline": true,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Let me help you every step of the way, from your first search to the day you get the ",
+        "value": "Let me help you every step of the way, from your first search to the day you get the keys.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "BUYING A HOME",
+        "value": "BUYING A HOME",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy005",
+        "title": "Getting ready",
+        "value": "Getting ready",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy006",
+        "title": "Finding the right home",
+        "value": "Finding the right home",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy007",
+        "title": "Making it yours",
+        "value": "Making it yours",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy008",
+        "title": "Mortgage calculator ↗",
+        "value": "Mortgage calculator ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy009",
+        "title": "Heading: Start with what matters to you.",
+        "value": "Start with what matters to you.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy010",
+        "title": "When purchasing a home, you’re faced with many decisions. The first is whether you’re",
+        "value": "When purchasing a home, you’re faced with many decisions. The first is whether you’re ready to buy, and what you need from your next home. We’ll talk about your priorities, timing and budget so your search starts with a clear direction.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy011",
+        "title": "Financing is an important part of that preparation. Once you’ve spoken with your lend",
+        "value": "Financing is an important part of that preparation. Once you’ve spoken with your lender and know the price range you’re comfortable with, we can focus on properties that fit.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy012",
+        "title": "Explore estimated mortgage payments →",
+        "value": "Explore estimated mortgage payments →",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy013",
+        "title": "Heading: Find the right home for you.",
+        "value": "Find the right home for you.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy014",
+        "title": "I stay familiar with homes on the market and local property values, helping you asses",
+        "value": "I stay familiar with homes on the market and local property values, helping you assess whether a property is fairly priced and in good condition. My local knowledge and construction experience can help you see the possibilities—and the practical considerations—behind a listing.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy015",
+        "title": "Search available properties, compare options, and tell me what catches your attention",
+        "value": "Search available properties, compare options, and tell me what catches your attention. I’ll help you arrange showings and assess the homes that match your needs.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy016",
+        "title": "Start your property search →",
+        "value": "Start your property search →",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy017",
+        "title": "Heading: Support through the details.",
+        "value": "Support through the details.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy018",
+        "title": "From preparing an offer to coordinating financing, inspections and closing, I’ll help",
+        "value": "From preparing an offer to coordinating financing, inspections and closing, I’ll help you navigate each step. My priority is a home-buying experience that feels clear, well supported and focused on your goals.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy019",
+        "title": "Heading: Ready for your next change?",
+        "value": "Ready for your next change?",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy020",
+        "title": "Let’s talk about what you’re looking for.",
+        "value": "Let’s talk about what you’re looking for.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy021",
+        "title": "Call or text Mike ↗",
+        "value": "Call or text Mike ↗",
+        "multiline": false,
+        "tag": "a"
+      }
+    ]
+  },
+  {
+    "key": "selling",
+    "title": "Selling Resources",
+    "path": "/selling.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "SELLING",
+        "value": "SELLING",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: A thoughtful plan. A confident next move.",
+        "value": "A thoughtful plan.\nA confident next move.",
+        "multiline": true,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Local knowledge, practical preparation and a marketing plan built around your home.",
+        "value": "Local knowledge, practical preparation and a marketing plan built around your home.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "SELLING YOUR HOME",
+        "value": "SELLING YOUR HOME",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy005",
+        "title": "Preparing your property",
+        "value": "Preparing your property",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy006",
+        "title": "Pricing your home",
+        "value": "Pricing your home",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy007",
+        "title": "Reaching buyers",
+        "value": "Reaching buyers",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy008",
+        "title": "Every step of the way",
+        "value": "Every step of the way",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy009",
+        "title": "Request a home evaluation ↗",
+        "value": "Request a home evaluation ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy010",
+        "title": "Heading: Make the most of your home.",
+        "value": "Make the most of your home.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy011",
+        "title": "Every property has its own strengths. We’ll look at your home, discuss your plans and",
+        "value": "Every property has its own strengths. We’ll look at your home, discuss your plans and decide what preparation makes sense before it goes on the market. My construction and renovation background brings a practical perspective to those decisions.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy012",
+        "title": "Heading: Start with the local market.",
+        "value": "Start with the local market.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy013",
+        "title": "Your home competes with other properties for buyers’ attention. A Comparative Market ",
+        "value": "Your home competes with other properties for buyers’ attention. A Comparative Market Analysis looks at similar homes and recent sales to help us understand its position in the current market.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy014",
+        "title": "I’ll help you set a competitive asking price that reflects your property, local condi",
+        "value": "I’ll help you set a competitive asking price that reflects your property, local conditions and your goals.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy015",
+        "title": "Request your home evaluation →",
+        "value": "Request your home evaluation →",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy016",
+        "title": "Heading: Help the right buyers find you.",
+        "value": "Help the right buyers find you.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy017",
+        "title": "Clear listing information and a strong online presence make it easier for buyers to e",
+        "value": "Clear listing information and a strong online presence make it easier for buyers to explore your property. We’ll discuss a marketing approach suited to your home, with the information buyers need and a straightforward way to arrange a showing or ask questions.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy018",
+        "title": "Heading: Support from listing to closing.",
+        "value": "Support from listing to closing.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy019",
+        "title": "I’ll work with you through inquiries, showings, offers and the details of completing ",
+        "value": "I’ll work with you through inquiries, showings, offers and the details of completing your sale. You’ll have someone to explain your options and keep your next move in view.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy020",
+        "title": "Heading: What could your home sell for?",
+        "value": "What could your home sell for?",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy021",
+        "title": "A personal evaluation is a useful place to start.",
+        "value": "A personal evaluation is a useful place to start.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy022",
+        "title": "Request an evaluation ↗",
+        "value": "Request an evaluation ↗",
+        "multiline": false,
+        "tag": "a"
+      }
+    ]
+  },
+  {
+    "key": "mortgage",
+    "title": "Mortgage Calculator",
+    "path": "/mortgage-calculator.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "BUYING",
+        "value": "BUYING",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: Plan your next move.",
+        "value": "Plan your next move.",
+        "multiline": false,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Explore estimated principal and interest payments using your own price, down payment ",
+        "value": "Explore estimated principal and interest payments using your own price, down payment and interest rate.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "Heading: Want to talk through your options?",
+        "value": "Want to talk through your options?",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy005",
+        "title": "Call or text me to discuss your next steps.",
+        "value": "Call or text me to discuss your next steps.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy006",
+        "title": "Call or text Mike ↗",
+        "value": "Call or text Mike ↗",
+        "multiline": false,
+        "tag": "a"
+      }
+    ]
+  },
+  {
+    "key": "evaluation",
+    "title": "Home Evaluation",
+    "path": "/home-evaluation.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "SELLING",
+        "value": "SELLING",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: What’s your home worth?",
+        "value": "What’s your home worth?",
+        "multiline": false,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Tell me a little about your property. I’ll follow up personally to discuss its value ",
+        "value": "Tell me a little about your property. I’ll follow up personally to discuss its value in the current market.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "A PERSONAL MARKET REVIEW",
+        "value": "A PERSONAL MARKET REVIEW",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy005",
+        "title": "Heading: Local insight. A clearer picture.",
+        "value": "Local insight.\nA clearer picture.",
+        "multiline": true,
+        "tag": "h2"
+      },
+      {
+        "name": "copy006",
+        "title": "A Comparative Market Analysis compares your home with similar properties and recent s",
+        "value": "A Comparative Market Analysis compares your home with similar properties and recent sales in your area. It’s a useful starting point when you’re considering a move.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy007",
+        "title": "Share your address and the details you know. I’ll get in touch to learn more and disc",
+        "value": "Share your address and the details you know. I’ll get in touch to learn more and discuss the next steps.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy008",
+        "title": "This is a request for a personal market evaluation, not an instant automated valuatio",
+        "value": "This is a request for a personal market evaluation, not an instant automated valuation or formal appraisal.",
+        "multiline": true,
+        "tag": "p"
+      }
+    ]
+  },
+  {
+    "key": "tools",
+    "title": "Helpful Tools",
+    "path": "/heretohelp.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "HELPFUL TOOLS",
+        "value": "HELPFUL TOOLS",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: A little help. All year round.",
+        "value": "A little help. All year round.",
+        "multiline": false,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Practical tools and local resources to make your home experience easier.",
+        "value": "Practical tools and local resources to make your home experience easier.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "Heading: Waste collection reminders",
+        "value": "Waste collection reminders",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy005",
+        "title": "Don’t miss your collection day. Set up reminders for what’s being collected at your a",
+        "value": "Don’t miss your collection day. Set up reminders for what’s being collected at your address, delivered when you want them.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy006",
+        "title": "Set up your reminders ↗",
+        "value": "Set up your reminders ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy007",
+        "title": "Heading: Personal text reminders",
+        "value": "Personal text reminders",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy008",
+        "title": "Birthdays, anniversaries and the dates you don’t want to miss. A reminder tool design",
+        "value": "Birthdays, anniversaries and the dates you don’t want to miss. A reminder tool designed to help you keep track of what matters.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy009",
+        "title": "This service is in development.",
+        "value": "This service is in development.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy010",
+        "title": "Heading: Trade & supply referrals",
+        "value": "Trade & supply referrals",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy011",
+        "title": "A growing resource based on real experiences and recommendations, connecting you with",
+        "value": "A growing resource based on real experiences and recommendations, connecting you with local trades and suppliers.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy012",
+        "title": "The referral directory is in development.",
+        "value": "The referral directory is in development.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy013",
+        "title": "PLANNING A MOVE?",
+        "value": "PLANNING A MOVE?",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy014",
+        "title": "Heading: A few useful starting points.",
+        "value": "A few useful starting points.",
+        "multiline": false,
+        "tag": "h2"
+      },
+      {
+        "name": "copy015",
+        "title": "Estimate mortgage payments ↗",
+        "value": "Estimate mortgage payments ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy016",
+        "title": "Request a home evaluation ↗",
+        "value": "Request a home evaluation ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy017",
+        "title": "Search available properties ↗",
+        "value": "Search available properties ↗",
+        "multiline": false,
+        "tag": "a"
+      }
+    ]
+  },
+  {
+    "key": "waste",
+    "title": "Waste Reminders",
+    "path": "/waste-calendar.html",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "HELPFUL TOOLS",
+        "value": "HELPFUL TOOLS",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy002",
+        "title": "Heading: Never miss collection day.",
+        "value": "Never miss collection day.",
+        "multiline": false,
+        "tag": "h1"
+      },
+      {
+        "name": "copy003",
+        "title": "Set up your waste collection reminders with the existing Change Realty reminder servi",
+        "value": "Set up your waste collection reminders with the existing Change Realty reminder service.",
+        "multiline": true,
+        "tag": "p"
+      },
+      {
+        "name": "copy004",
+        "title": "← Back to Helpful Tools",
+        "value": "← Back to Helpful Tools",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy005",
+        "title": "Open reminder tool in a full window ↗",
+        "value": "Open reminder tool in a full window ↗",
+        "multiline": false,
+        "tag": "a"
+      },
+      {
+        "name": "copy006",
+        "title": "If the tool doesn’t appear or you need more room, use the full-window link above. Rem",
+        "value": "If the tool doesn’t appear or you need more room, use the full-window link above. Reminder settings are managed by the existing reminder service.",
+        "multiline": true,
+        "tag": "p"
+      }
+    ]
+  },
+  {
+    "key": "search",
+    "title": "Search",
+    "path": "/map",
+    "fields": [
+      {
+        "name": "copy001",
+        "title": "Heading: Find a property",
+        "value": "Find a property",
+        "multiline": false,
+        "tag": "h1"
+      }
+    ]
+  }
+]
